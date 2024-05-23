@@ -20,5 +20,16 @@ Things you may want to cover:
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
-
 * ...
+
+## Setup
+
+### Dockerの準備
+```bash
+docker-compose up --build -d
+```
+
+### データベースの準備
+
+
+```bash
