@@ -6,7 +6,7 @@ application up and running.
 Things you may want to cover:
 
 * Ruby version
-
+    - 3.3.0
 * System dependencies
 
 * Configuration
@@ -24,12 +24,43 @@ Things you may want to cover:
 
 ## Setup
 
-### Dockerの準備
+### イメージビルド & コンテナ起動
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
-### データベースの準備
-
-
+### Dockerのコンテナ起動
 ```bash
+ docker compose up -d
+```
+
+### Dockerのコンテナ終了
+```bash
+ docker compose down
+```
+
+### Dockerのコンテナ再起動
+```bash
+ docker compose restart -d
+```
+
+### Dockerのコンテナに入る
+```bash
+ docker compose exec runner bash
+```
+
+### データベースの作成
+```bash
+ docker compose exec runner sh db/entrypoint.sh
+```
+
+### rspecの実行
+```bash
+ docker compose exec runner bundle exec rspec
+```
+
+### rubocopの実行
+```bash
+ docker compose exec runner bundle exec rubocop
+```
+
