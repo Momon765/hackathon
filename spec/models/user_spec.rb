@@ -40,8 +40,10 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role, id: 999) }
       let(:user) { create(:user, role: role, employment_type: employment_type) }
 
+      before { stub_const('EmploymentType::TRAINEE_ID', 777) }
+
       context '研修生の場合' do
-        let(:employment_type) { EmploymentType.find_by(id: EmploymentType::TRAINEE_ID) }
+        let(:employment_type) { create(:employment_type, id: 777) }
 
         it { expect(user.role_id).to be_nil }
       end
