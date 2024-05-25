@@ -95,6 +95,7 @@ services:
       timeout: 3s
       retries: 30
 
+  # docker sslのために、追加
   https-portal:
     image: steveltn/https-portal:1
     ports:
