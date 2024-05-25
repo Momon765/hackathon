@@ -46,9 +46,39 @@ export const Header = (props: Props) => {
           index={tabIndex}
         >
           <TabList>
-            <Tab>新着</Tab>
-            <Tab>開催予定</Tab>
-            <Tab>履歴</Tab>
+            <Tab
+              sx={{
+                fontWeight: "bold",
+                color: "gray",
+              }}
+              _selected={{
+                color: "black",
+              }}
+            >
+              新着
+            </Tab>
+            <Tab
+              sx={{
+                fontWeight: "bold",
+                color: "gray",
+              }}
+              _selected={{
+                color: "black",
+              }}
+            >
+              開催予定
+            </Tab>
+            <Tab
+              sx={{
+                fontWeight: "bold",
+                color: "gray",
+              }}
+              _selected={{
+                color: "black",
+              }}
+            >
+              履歴
+            </Tab>
           </TabList>
           <TabIndicator
             mt="-1.5px"
@@ -67,7 +97,7 @@ export const Header = (props: Props) => {
           right={4}
           onClick={props.onClickNew}
         >
-          新規作成
+          作成
         </Button>
       </Container>
     </Box>
