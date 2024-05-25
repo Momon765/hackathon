@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as HistoryRouteImport } from './routes/history/route'
 import { Route as EventsRouteImport } from './routes/events/route'
 
 // Create Virtual Routes
@@ -32,6 +33,11 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const HistoryRouteRoute = HistoryRouteImport.update({
+  path: '/history',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const EventsRouteRoute = EventsRouteImport.update({
   path: '/events',
@@ -61,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRoute
     }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -83,6 +96,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   EventsRouteRoute,
+  HistoryRouteRoute,
   AboutLazyRoute,
   HogeLazyRoute,
 })
@@ -97,6 +111,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
+        "/history",
         "/about",
         "/hoge"
       ]
@@ -106,6 +121,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/events": {
       "filePath": "events/route.tsx"
+    },
+    "/history": {
+      "filePath": "history/route.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"

@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    tabIndex: 0,
+    pathName: "/",
     onClickTab: fn(),
     onClickNew: fn(),
   },

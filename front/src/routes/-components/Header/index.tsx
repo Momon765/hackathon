@@ -10,18 +10,26 @@ import {
 } from "@chakra-ui/react"
 import { RiPencilFill } from "react-icons/ri"
 
+export const TABS = ["/", "/events", "/history"] as const
+
 type Props = {
-  tabIndex: number
+  pathName: string
   onClickTab: (index: number) => void
   onClickNew: () => void
 }
 
 export const Header = (props: Props) => {
+  const tabIndex = TABS.findIndex((tab) => tab.startsWith(props.pathName))
+
   return (
     <Box
       as="header"
       bg="backgroundLight"
       pt={2}
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
       sx={{
         borderBottom: "1px solid",
         borderColor: "divider",
@@ -35,7 +43,7 @@ export const Header = (props: Props) => {
           variant="unstyled"
           colorScheme="red"
           onChange={props.onClickTab}
-          index={props.tabIndex}
+          index={tabIndex}
         >
           <TabList>
             <Tab>新着</Tab>
@@ -56,7 +64,7 @@ export const Header = (props: Props) => {
           size="sm"
           position="absolute"
           bottom={1}
-          right={0}
+          right={4}
           onClick={props.onClickNew}
         >
           新規作成
