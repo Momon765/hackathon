@@ -55,6 +55,13 @@ docker compose up --build -d
  docker compose exec runner sh db/entrypoint.sh
 ```
 
+## ページにアクセスするには
+`/etc/hosts` に以下を追加する。
+```bash
+ 127.0.0.1 devsite.local
+```
+https://devsite.local にアクセスする。
+
 ## rspecの実行
 ```bash
  docker compose exec runner bundle exec rspec
