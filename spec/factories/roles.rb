@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :role do
-    association :department
+    department
     sequence(:name) { |n| "role#{n}" }
   end
 end

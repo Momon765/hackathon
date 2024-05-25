@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true
@@ -9,9 +11,9 @@ class User < ApplicationRecord
   }
 
   belongs_to :role, optional: true
-  # belongs_to :employment_type
+  belongs_to :employment_type
 
-  # before_save :check_role
+  before_save :check_role
 
   private
 

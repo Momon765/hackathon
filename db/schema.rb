@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_035324) do
     t.bigint "employment_type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employment_type_id"], name: "index_users_on_employment_type_id"
     t.index ["role_id"], name: "index_users_on_role_id"
   end

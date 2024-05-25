@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -35,20 +37,19 @@ RSpec.describe User, type: :model do
 
   describe 'callback' do
     describe 'check_role' do
-      let(:user) { build(:user, role_id: 3, employment_type_id: employment_type_id) }
-
-      before { user.save }
+      let(:role) { create(:role, id: 999) }
+      let(:user) { create(:user, role: role, employment_type: employment_type) }
 
       context '研修生の場合' do
-        let(:employment_type_id) { EmploymentType::TRAINEE_ID }
+        let(:employment_type) { EmploymentType.find_by(id: EmploymentType::TRAINEE_ID) }
 
         it { expect(user.role_id).to be_nil }
       end
 
       context '研修生以外の場合' do
-        let(:employment_type_id) { 2 }
+        let(:employment_type) { create(:employment_type, id: 111) }
 
-        it { expect(user.role_id).to be 3 }
+        it { expect(user.role_id).to be 999 }
       end
     end
   end
