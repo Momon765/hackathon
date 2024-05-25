@@ -113,7 +113,7 @@ RSpec.describe Event, type: :model do
       it '開催者と開催日時が一致するイベントが存在したら無効であること' do
         user = create(:user)
         date = DateTime.new(2099, 6, 1, 12, 0)
-        event = create(:event, owner_id: user.id, date: date)
+        create(:event, owner_id: user.id, date: date)
         new_event = build(:event, owner_id: user.id, date: date)
         expect(new_event).not_to be_valid
       end

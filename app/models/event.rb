@@ -26,12 +26,12 @@ class Event < ApplicationRecord
   def later_deadline_than_current_time
     return if deadline.nil?
 
-    errors.add(:deadline, 'は現在時刻より遅い日時を設定してください') if Time.now > deadline
+    errors.add(:deadline, 'は現在時刻より遅い日時を設定してください') if Time.zone.now > deadline
   end
 
   def later_date_than_current_time
     return if date.nil?
 
-    errors.add(:date, 'は現在時刻より遅い日時を設定してください') if Time.now > date
+    errors.add(:date, 'は現在時刻より遅い日時を設定してください') if Time.zone.now > date
   end
 end
