@@ -1,0 +1,715 @@
+openapi: 3.0.3
+info:
+  title: Gohan Schema
+  description: >-
+    ハッカソンのスキーマ
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+tags:
+  - name: events
+    description: イベント
+  - name: users
+    description: ユーザー
+  - name: restaurants
+    description: レストラン
+  - name: departments
+    description: 部署
+  - name: roles
+    description: 役職
+  - name: employmentTypes
+    description: 雇用形態
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        title:
+         type: string
+         example: "【全社】エンジニア交流会"
+        description:
+          type: string
+          example: "エンジニア同士の交流会です。"
+        start_date:
+          type: string
+          format: date-time
+          example: "2021-09-01T10:00:00Z"
+        end_date:
+          type: string
+          format: date-time
+          example: "2021-09-01T12:00:00Z"
+        image_url:
+          type: string
+          example: "https://example.com/image.jpg"
+        deadline:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+        is_anonymous:
+          type: boolean
+          example: false
+        limit:
+          type: integer
+          example: 10
+        organizer:
+          $ref: '#/components/schemas/User'
+        restaurant:
+          $ref: '#/components/schemas/Restaurant'
+        communication_ch_id:
+          type: string
+          example: "C12345678"
+          description: "SlackのチャンネルID"
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      required:
+        - title
+        - start_date
+        - end_date
+        - image_url
+        - limit
+        - is_anonymous
+        - organizer
+    Restaurant:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        api_stored_id:
+          type: string
+          example: "1"
+          description: "ホットペッパーAPIのID"
+      required:
+        - id
+        - api_stored_id
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "クラウドハウス採用"
+      required:
+        - id
+        - name
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "エンジニア"
+        department:
+          $ref: '#/components/schemas/Department'
+      required:
+        - id
+        - name
+        - department
+    EmploymentType:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "正社員"
+      required:
+        - id
+        - name
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "山田太郎"
+        email:
+          type: string
+          example: "hoge@hoge.hoge"
+        sex:
+          type: number
+          example: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: "0: 男性, 1: 女性, 2: その他"
+        description:
+          type: string
+          example: "エンジニアです。"
+          description: "自己紹介"
+        image_url:
+          type: string
+          example: "https://example.com/image.jpg"
+        slack_id:
+          type: string
+          example: "U12345678"
+        role:
+          $ref: '#/components/schemas/Role'
+        employmentType:
+          $ref: '#/components/schemas/EmploymentType'
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+      required:
+        - id
+        - name
+        - email
+        - slack_id
+    ClientError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: "Bad Request"
+        details:
+          type: object
+          example: {"title": "title is required"}
+      required:
+        - status
+        - message
+    ServerError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: "Internal Server Error"
+      required:
+        - status
+        - message
+    GetEventsResponse:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+      required:
+        - events
+    PostEventRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "【全社】エンジニア交流会"
+        is_anonymous:
+          type: boolean
+          example: false
+        start_date:
+          type: string
+          format: date-time
+          example: "2021-09-01T10:00:00Z"
+        end_date:
+          type: string
+          format: date-time
+          example: "2021-09-01T12:00:00Z"
+        deadline:
+          type: string
+          format: date-time
+          example: "2021-08-01T12:00:00Z"
+        restaurant:
+          type: string
+          example: "1"
+        limit:
+          type: integer
+          example: 10
+        role_ids:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+        employment_type_ids:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+        sexes:
+          type: array
+          items:
+            type: integer
+          example: [0, 1]
+        description:
+          type: string
+          example: "エンジニア同士の交流会です。"
+    GetEventResponse:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - event
+    GetUserResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - user
+    PutUserRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          example: "エンジニアです。"
+          description: "自己紹介"
+        sex:
+          type: number
+          example: 1
+          enum:
+            - 0
+            - 1
+            - 2
+          description: "0: 男性, 1: 女性, 2: その他"
+        role_id:
+          type: integer
+          example: 1
+        employment_type_id:
+          type: integer
+          example: 1
+    GetRestaurantsResponse:
+      type: object
+      properties:
+        restaurants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Restaurant'
+      required:
+        - restaurants
+    GetDepartmentsResponse:
+      type: object
+      properties:
+        departments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+      required:
+        - departments
+    GetRolesResponse:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      required:
+        - roles
+    GetEmploymentTypesResponse:
+      type: object
+      properties:
+        employmentTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmploymentType'
+      required:
+        - employmentTypes
+    JoinEventRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+      required:
+        - user_id
+    JoinEventResponse:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+paths:
+  /events:
+    get:
+      summary: イベントの一覧を取得
+      description: イベントの一覧を取得
+      operationId: getEvents
+      tags:
+        - events
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventsResponse'
+    post:
+      summary: イベントを作成
+      description: イベントを作成
+      operationId: postEvent
+      tags:
+        - events
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEventRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /events/{event_id}:
+    get:
+      summary: イベントの詳細を取得
+      description: イベントの詳細を取得
+      operationId: getEvent
+      tags:
+        - events
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: イベントID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    put:
+      summary: イベントを更新
+      description: イベントを更新
+      operationId: putEvent
+      tags:
+        - events
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: イベントID
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEventRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    delete:
+      summary: イベントを削除
+      description: イベントを削除
+      operationId: deleteEvent
+      tags:
+        - events
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: イベントID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /events/{event_id}/participants:
+    post:
+      summary: イベントに参加申し込みをする
+      description: 特定のイベントに特定のユーザーが参加申し込みをします。
+      operationId: joinEvent
+      tags:
+        - events
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          description: イベントID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinEventRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinEventResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /users/{user_id}:
+    get:
+      summary: ユーザーの詳細を取得
+      description: ユーザーの詳細を取得
+      operationId: getUser
+      tags:
+        - users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ユーザーID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+    put:
+      summary: ユーザーを更新
+      description: ユーザーを更新
+      operationId: putUser
+      tags:
+        - users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ユーザーID
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUserRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /restaurants:
+    get:
+      summary: レストランの一覧を取得
+      description: レストランの一覧を取得
+      operationId: getRestaurants
+      tags:
+        - restaurants
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRestaurantsResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /departments:
+    get:
+      summary: 部署の一覧を取得
+      description: 部署の一覧を取得
+      operationId: getDepartments
+      tags:
+        - departments
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDepartmentsResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /departments/{department_id}/roles:
+    get:
+      summary: 部署の役職の一覧を取得
+      description: 部署の役職の一覧を取得
+      operationId: getRoles
+      tags:
+        - roles
+      parameters:
+        - name: department_id
+          in: path
+          required: true
+          description: 部署ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRolesResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /employment_types:
+    get:
+      summary: 雇用形態の一覧を取得
+      description: 雇用形態の一覧を取得
+      operationId: getEmploymentTypes
+      tags:
+        - employmentTypes
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEmploymentTypesResponse'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+
