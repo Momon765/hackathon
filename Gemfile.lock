@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/kmrshntr/omniauth-slack.git
-  revision: afd9f5c055d4393b70f3218c99baa21adfb458df
-  specs:
-    omniauth-slack (2.3.0)
-      omniauth-oauth2 (~> 1.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -84,8 +77,11 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    aes_key_wrap (1.1.0)
     ast (2.4.2)
+    attr_required (1.0.2)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     better_html (2.0.2)
       actionview (>= 6.0)
       activesupport (>= 6.0)
@@ -94,6 +90,7 @@ GEM
       parser (>= 2.4)
       smart_properties
     bigdecimal (3.1.6)
+    bindata (2.5.0)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -119,6 +116,12 @@ GEM
     debug (1.9.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    devise (4.9.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.5.1)
     dotenv (3.1.0)
     dotenv-rails (3.1.0)
@@ -126,6 +129,8 @@ GEM
       railties (>= 6.1)
     drb (2.2.1)
     dry-cli (1.0.0)
+    email_validator (2.2.4)
+      activemodel
     erb_lint (0.5.0)
       activesupport
       better_html (>= 2.0.1)
@@ -141,6 +146,8 @@ GEM
       railties (>= 5.0.0)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
     faraday-net_http (3.1.0)
       net-http
     globalid (1.2.1)
@@ -157,8 +164,13 @@ GEM
       rdoc
       reline (>= 0.4.2)
     json (2.7.1)
-    jwt (2.8.1)
+    json-jwt (1.16.6)
+      activesupport (>= 4.2)
+      aes_key_wrap
       base64
+      bindata
+      faraday (~> 2.0)
+      faraday-follow_redirects
     language_server-protocol (3.17.0.3)
     localhost (1.3.1)
     loofah (2.22.0)
@@ -178,8 +190,6 @@ GEM
     mini_mime (1.1.5)
     minitest (5.22.2)
     msgpack (1.7.2)
-    multi_xml (0.7.1)
-      bigdecimal (~> 3.1)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -199,23 +209,31 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
-    oauth2 (2.0.9)
-      faraday (>= 0.17.3, < 3.0)
-      jwt (>= 1.0, < 3.0)
-      multi_xml (~> 0.5)
-      rack (>= 1.2, < 4)
-      snaky_hash (~> 2.0)
-      version_gem (~> 1.1)
-    omniauth (2.1.2)
+    omniauth (1.9.2)
       hashie (>= 3.4.6)
-      rack (>= 2.2.3)
-      rack-protection
-    omniauth-oauth2 (1.8.0)
-      oauth2 (>= 1.4, < 3)
-      omniauth (~> 2.0)
-    omniauth-rails_csrf_protection (1.0.2)
+      rack (>= 1.6.2, < 3)
+    omniauth-rails_csrf_protection (0.1.2)
       actionpack (>= 4.2)
-      omniauth (~> 2.0)
+      omniauth (>= 1.3.1)
+    omniauth-sign-in-with-slack (1.1.0)
+      omniauth_openid_connect (~> 0.7.1)
+    omniauth_openid_connect (0.7.1)
+      omniauth (>= 1.9, < 3)
+      openid_connect (~> 2.2)
+    openid_connect (2.3.0)
+      activemodel
+      attr_required (>= 1.0.0)
+      email_validator
+      faraday (~> 2.0)
+      faraday-follow_redirects
+      json-jwt (>= 1.16)
+      mail
+      rack-oauth2 (~> 2.2)
+      swd (~> 2.0)
+      tzinfo
+      validate_url
+      webfinger (~> 2.0)
+    orm_adapter (0.5.0)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -236,19 +254,23 @@ GEM
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
-    rack (3.0.9.1)
-    rack-protection (4.0.0)
-      base64 (>= 0.1.0)
-      rack (>= 3.0.0, < 4)
+    rack (2.2.9)
+    rack-oauth2 (2.2.1)
+      activesupport
+      attr_required
+      faraday (~> 2.0)
+      faraday-follow_redirects
+      json-jwt (>= 1.11.0)
+      rack (>= 2.1.0)
     rack-proxy (0.7.7)
       rack
-    rack-session (2.0.0)
-      rack (>= 3.0.0)
+    rack-session (1.0.2)
+      rack (< 3)
     rack-test (2.1.0)
       rack (>= 1.3)
-    rackup (2.1.0)
-      rack (>= 3)
-      webrick (~> 1.8)
+    rackup (1.0.0)
+      rack (< 3)
+      webrick
     rails (7.1.3.2)
       actioncable (= 7.1.3.2)
       actionmailbox (= 7.1.3.2)
@@ -289,6 +311,9 @@ GEM
     regexp_parser (2.9.0)
     reline (0.4.3)
       io-console (~> 0.5)
+    responders (3.1.1)
+      actionpack (>= 5.2)
+      railties (>= 5.2)
     rexml (3.2.6)
     rspec-core (3.13.0)
       rspec-support (~> 3.13.0)
@@ -350,9 +375,6 @@ GEM
       redis-client (>= 0.19.0)
     slack-notifier (2.4.0)
     smart_properties (1.17.0)
-    snaky_hash (2.0.1)
-      hashie
-      version_gem (~> 1.1, >= 1.1.1)
     sorbet-runtime (0.5.11287)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
@@ -364,6 +386,11 @@ GEM
     stimulus-rails (1.3.3)
       railties (>= 6.0.0)
     stringio (3.1.0)
+    swd (2.0.3)
+      activesupport (>= 3)
+      attr_required (>= 0.0.5)
+      faraday (~> 2.0)
+      faraday-follow_redirects
     tailwindcss-rails (2.3.0-aarch64-linux)
       railties (>= 6.0.0)
     tailwindcss-rails (2.3.0-arm64-darwin)
@@ -380,7 +407,9 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
     uri (0.13.0)
-    version_gem (1.1.4)
+    validate_url (1.0.15)
+      activemodel (>= 3.0.0)
+      public_suffix
     vite_rails (3.0.17)
       railties (>= 5.1, < 8)
       vite_ruby (~> 3.0, >= 3.2.2)
@@ -388,11 +417,17 @@ GEM
       dry-cli (>= 0.7, < 2)
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webfinger (2.1.3)
+      activesupport
+      faraday (~> 2.0)
+      faraday-follow_redirects
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -410,6 +445,7 @@ DEPENDENCIES
   bootsnap
   capybara-playwright-driver
   debug
+  devise
   dotenv
   dotenv-rails
   erb_lint
@@ -417,7 +453,7 @@ DEPENDENCIES
   importmap-rails
   localhost
   omniauth-rails_csrf_protection
-  omniauth-slack!
+  omniauth-sign-in-with-slack
   pg (~> 1.1)
   pry-rails
   puma (>= 5.0)
