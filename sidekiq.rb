@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 redis_config = { url: 'redis://redis:6379/0' }
 
