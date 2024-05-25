@@ -9,6 +9,12 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
 tags:
+  - name: me
+    description: 自分
+  - name: login
+    description: ログイン
+  - name: callback
+    description: OAuth2のコールバック
   - name: events
     description: イベント
   - name: users
@@ -23,6 +29,14 @@ tags:
     description: 雇用形態
 components:
   schemas:
+    LoginUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          example: "https://example.com/login"
+      required:
+        - url
     Event:
       type: object
       properties:
@@ -198,6 +212,18 @@ components:
       required:
         - status
         - message
+    AuthError:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: "Unauthorized"
+      required:
+        - status
+        - message
     ServerError:
       type: object
       properties:
@@ -256,11 +282,9 @@ components:
           items:
             type: integer
           example: [1, 2]
-        sexes:
-          type: array
-          items:
-            type: integer
-          example: [0, 1]
+        scope_sex:
+          type: integer
+          example: 0
         description:
           type: string
           example: "エンジニア同士の交流会です。"
@@ -348,7 +372,88 @@ components:
       properties:
         event:
           $ref: '#/components/schemas/Event'
+    GetLoginUrlResponse:
+      $ref: '#/components/schemas/LoginUrl'
 paths:
+  /me:
+    get:
+      summary: 自分の情報を取得
+      description: 初回表示時にこのAPIを叩いてセッションが有効か確認する
+      operationId: getMe
+      tags:
+        - me
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /login:
+    get:
+      summary: ログインURLを取得
+      description: ログインURLを取得
+      operationId: getLoginUrl
+      tags:
+        - login
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginUrlResponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /callback:
+    get:
+      summary: OAuth2のコールバック
+      description: OAuth2のコールバック
+      operationId: callback
+      tags:
+        - callback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          description: コード
+          schema:
+            type: string
+      responses:
+        '301':
+          description: Redirect
+          headers:
+            Location:
+              description: |-
+                ユーザーを新たに作成した場合は http://localhost:5173/settings/profile
+                そうでない場合は http://localhost:5173/
+              schema:
+                type: string
+                enum:
+                  - http://localhost:5173/register
+                  - http://localhost:5173/
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
   /events:
     get:
       summary: イベントの一覧を取得
@@ -715,4 +820,3 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerError'
-
