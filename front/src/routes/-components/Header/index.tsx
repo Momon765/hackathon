@@ -35,7 +35,7 @@ export const Header = (props: Props) => {
         borderColor: "divider",
       }}
     >
-      <Container position="relative" maxW="container.xl">
+      <Container position="relative" maxW="container.lg">
         <Text fontSize="small" fontWeight="bold">
           🍙 GOHAN
         </Text>

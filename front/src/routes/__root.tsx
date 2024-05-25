@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
 import { Header, TABS } from "./-components/Header"
-import { Container } from "@chakra-ui/react"
+import { Box, Container } from "@chakra-ui/react"
 
 export const Route = createRootRoute({
   component: () => {
@@ -24,17 +24,17 @@ export const Route = createRootRoute({
     }
 
     return (
-      <>
+      <Box minH="100vh" background={"background"}>
         <Header
           pathName={location.pathname}
           onClickTab={handleClickTab}
           onClickNew={() => console.log("click new")}
         />
-        <Container maxW="container.xl" pt={20}>
+        <Container maxW="container.lg" pt={20} background={"background"}>
           <Outlet />
         </Container>
         <TanStackRouterDevtools />
-      </>
+      </Box>
     )
   },
 })
