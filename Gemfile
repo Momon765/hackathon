@@ -15,6 +15,7 @@ gem 'slack-notifier'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
+gem 'omniauth-slack', github: 'kmrshntr/omniauth-slack'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'vite_rails'
@@ -32,6 +33,8 @@ group :development, :test do
   gem 'rubocop-rails'
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
+
+  gem 'localhost'
 end
 
 group :development do
