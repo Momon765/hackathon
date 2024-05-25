@@ -14,6 +14,13 @@ class Event < ApplicationRecord
   validate :later_start_date_than_current_time
   validate :never_overlap_date
 
+  has_many :users_events, dependent: :destroy
+  has_many :users, through: :users_events, dependent: :destroy
+  has_many :events_employment_types, dependent: :destroy
+  has_many :employment_types, through: :events_employment_types, dependent: :destroy
+  has_many :events_roles, dependent: :destroy
+  has_many :roles, through: :events_roles, dependent: :destroy
+
   enum scope_sex: {
     no_scope: 0,
     male: 1,
