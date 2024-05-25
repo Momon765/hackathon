@@ -21,4 +21,10 @@ Rails.application.routes.draw do
       post 'participants'
     end
   end
+
+  resources :users, only: [:show, :update]
+  resources :employment_types, only: [:index]
+  resources :departments, only: [:index] do
+    resources :roles, only: [:index]
+  end
 end
