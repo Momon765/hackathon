@@ -10,15 +10,28 @@ RSpec.describe Event, type: :model do
       expect(event).to be_valid
     end
 
-    describe 'date' do
+    describe 'start_date' do
       it 'nilは無効であること' do
-        event.date = nil
+        event.start_date = nil
         expect(event).not_to be_valid
       end
 
-      it '現在時刻以前の開催日時は無効であること' do
-        event.deadline = nil
-        event.date = Date.new(2020, 6, 1)
+      it '現在時刻以前の開始日時は無効であること' do
+        event.start_date = DateTime.new(2020, 6, 1, 12, 0)
+        event.end_date = DateTime.new(2020, 6, 1, 14, 0)
+        expect(event).not_to be_valid
+      end
+    end
+
+    describe 'end_date' do
+      it 'nilは無効であること' do
+        event.end_date = nil
+        expect(event).not_to be_valid
+      end
+
+      it '開始日時以前の終了日時は無効であること' do
+        event.start_date = DateTime.new(2099, 6, 1, 12, 0)
+        event.end_date = DateTime.new(2099, 6, 1, 10, 0)
         expect(event).not_to be_valid
       end
     end
@@ -53,7 +66,7 @@ RSpec.describe Event, type: :model do
 
       it '開催日時以降の締切は無効であること' do
         event.deadline = Date.new(2099, 6, 1)
-        event.date = Date.new(2099, 5, 31)
+        event.start_date = Date.new(2099, 5, 31)
         expect(event).not_to be_valid
       end
 
@@ -110,11 +123,12 @@ RSpec.describe Event, type: :model do
         expect(event).to be_valid
       end
 
-      it '開催者と開催日時が一致するイベントが存在したら無効であること' do
-        user = create(:user)
-        date = DateTime.new(2099, 6, 1, 12, 0)
-        create(:event, owner_id: user.id, date: date)
-        new_event = build(:event, owner_id: user.id, date: date)
+      it '同じ開催者で開催日時の範囲が重なるイベントが存在したら無効であること' do
+        owner = create(:user)
+        create(:event, owner_id: owner.id,
+                start_date: DateTime.new(2099, 6, 1, 12, 0), end_date: DateTime.new(2099, 6, 1, 14, 0))
+        new_event = build(:event, owner_id: owner.id,
+                      start_date: DateTime.new(2099, 6, 1, 13, 0), end_date: DateTime.new(2099, 6, 1, 15, 0))
         expect(new_event).not_to be_valid
       end
     end

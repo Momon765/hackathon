@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_080817) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_081652) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_080817) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.datetime "date", null: false
+    t.datetime "start_date", null: false
     t.string "title", null: false
     t.datetime "deadline"
     t.string "description"
@@ -38,7 +38,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_080817) do
     t.integer "scope_sex", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["owner_id", "date"], name: "index_events_on_owner_id_and_date", unique: true
+    t.datetime "end_date", null: false
+    t.index ["owner_id", "start_date"], name: "index_events_on_owner_id_and_start_date", unique: true
     t.index ["owner_id"], name: "index_events_on_owner_id"
   end
 
