@@ -12,6 +12,7 @@ class User < ApplicationRecord
 
   belongs_to :role, optional: true
   belongs_to :employment_type
+  has_many :events, dependent: :destroy
 
   before_save :check_role
 

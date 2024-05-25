@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_081652) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_110930) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,14 +33,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_081652) do
     t.string "description"
     t.boolean "is_anonymous", default: false, null: false
     t.integer "limit"
-    t.bigint "owner_id"
+    t.bigint "organizer_id"
     t.integer "communication_ch_id"
     t.integer "scope_sex", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "end_date", null: false
-    t.index ["owner_id", "start_date"], name: "index_events_on_owner_id_and_start_date", unique: true
-    t.index ["owner_id"], name: "index_events_on_owner_id"
+    t.index ["organizer_id", "start_date"], name: "index_events_on_organizer_id_and_start_date", unique: true
+    t.index ["organizer_id"], name: "index_events_on_organizer_id"
   end
 
   create_table "events_employment_types", force: :cascade do |t|
@@ -95,7 +95,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_081652) do
     t.index ["user_id"], name: "index_users_events_on_user_id"
   end
 
-  add_foreign_key "events", "users", column: "owner_id"
+  add_foreign_key "events", "users", column: "organizer_id"
   add_foreign_key "events_employment_types", "employment_types"
   add_foreign_key "events_employment_types", "events"
   add_foreign_key "events_roles", "events"
