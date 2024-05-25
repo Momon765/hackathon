@@ -17,4 +17,6 @@ Rails.application.routes.draw do
       post 'participants'
     end
   end
+
+  resources :users, only: [:show, :update]
 end
