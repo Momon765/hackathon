@@ -7,7 +7,7 @@ class AddDeviseToUsers < ActiveRecord::Migration[7.1]
       # t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
 
-      t.integer :uid, null: false
+      t.string :uid, null: false
       t.string :provider, null: false
       t.string :profile_image_url
 

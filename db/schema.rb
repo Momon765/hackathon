@@ -81,7 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_133645) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false
-    t.integer "uid", null: false
+    t.string "uid", null: false
     t.string "provider", null: false
     t.string "profile_image_url"
     t.index ["email"], name: "index_users_on_email", unique: true
