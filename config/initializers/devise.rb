@@ -313,6 +313,4 @@ Devise.setup do |config|
 
   config.omniauth :slack, ENV['SLACK_CLIENT_ID'], ENV['SLACK_CLIENT_SECRET']
                   # scope: [:openid, :email, :profile],
-                  # uid_field: :preferred_username
-
 end

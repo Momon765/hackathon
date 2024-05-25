@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration[7.1]
       t.text :description
 
       t.references :role, foreign_key: true
-      t.references :employment_type, null: false, foreign_key: true
+      t.references :employment_type, foreign_key: true
 
       t.timestamps
 

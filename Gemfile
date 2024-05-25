@@ -15,7 +15,6 @@ gem 'slack-notifier'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
-# gem 'omniauth-slack', github: 'kmrshntr/omniauth-slack'
 gem 'omniauth-sign-in-with-slack'
 gem 'omniauth-rails_csrf_protection'
 gem 'turbo-rails'
@@ -37,13 +36,14 @@ group :development, :test do
   gem 'rubocop-rails'
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
-
-  gem 'localhost'
 end
 
 group :development do
   gem 'ruby-lsp'
   gem 'web-console'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+  gem 'pry-doc'
 end
 
 group :test do

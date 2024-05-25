@@ -77,17 +77,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_133645) do
     t.integer "sex", default: 0, null: false
     t.text "description"
     t.bigint "role_id"
-    t.bigint "employment_type_id", null: false
+    t.bigint "employment_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.integer "uid", null: false
+    t.string "provider", null: false
+    t.string "profile_image_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employment_type_id"], name: "index_users_on_employment_type_id"
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
   create_table "users_events", force: :cascade do |t|

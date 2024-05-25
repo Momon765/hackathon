@@ -15,34 +15,33 @@ class User < ApplicationRecord
   }
 
   belongs_to :role, optional: true
-  belongs_to :employment_type
+  belongs_to :employment_type, optional: true
   has_many :events, dependent: :destroy
 
   before_save :check_role
 
   class << self
+    # ユーザー情報を取得
+    # @param [OmniAuth::AuthHash] auth
+    # @return [User]
     def find_for_oauth(auth)
       @user = User.find_or_initialize_by(uid: auth.uid, provider: auth.provider)
       assign_info(auth)
-      attach_image(auth.info.image) if auth.info.image
-      @user.skip_confirmation!
       @user.save!
       @user
     rescue StandardError => e
       e.message
     end
 
+    # ユーザー情報を代入
+    # @param [OmniAuth::AuthHash] auth
     def assign_info(auth)
-      @user.id = auth.uid
+      @user.uid = auth.uid
       @user.provider = auth.provider
       @user.name = auth.info.name
       @user.email = auth.info.email
+      @user.profile_image_url = auth.info.picture
       @user.password = Devise.friendly_token[0, 20]
-    end
-
-    def attach_image(image_url)
-      @user.image.attach(io: URI.parse(image_url).open, filename: "user_#{@user.id}_image")
-      # ファイルの一番上に　require 'open-uri' が必要
     end
   end
 

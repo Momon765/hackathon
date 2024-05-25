@@ -31,13 +31,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def callback_from(provider)
-    # @user = User.find_for_oauth(request.env['omniauth.auth'].delete_if { |k, _v| k == 'extra' })
-    # if @user.instance_of?(User)
-    #   flash[:notice] = t('devise.omniauth_callbacks.success', kind: provider.to_s.capitalize)
-    #   sign_in_and_redirect @user, event: :authentication
-    # else
-    #   session["devise.#{provider}_data"] = request.env['omniauth.auth']
-    #   redirect_to new_user_registration_path, alert: @user
-    # end
+    @user = User.find_for_oauth(request.env['omniauth.auth'].delete_if { |k, _v| k == 'extra' })
+    if @user.instance_of?(User)
+      flash[:notice] = t('devise.omniauth_callbacks.success', kind: provider.to_s.capitalize)
+      sign_in @user, event: :authentication
+      redirect_to root_path
+    else
+      session["devise.#{provider}_data"] = request.env['omniauth.auth'].credentials.id_token
+      redirect_to new_user_registration_path, alert: @user
+    end
   end
 end
