@@ -16,6 +16,7 @@ gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
 gem 'omniauth-slack', github: 'kmrshntr/omniauth-slack'
+gem 'omniauth-rails_csrf_protection'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'vite_rails'
