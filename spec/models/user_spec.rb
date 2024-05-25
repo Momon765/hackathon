@@ -61,6 +61,48 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'public methods' do
+    let(:auth) do
+      OmniAuth::AuthHash.new(
+        uid: 'test111',
+        provider: 'slack',
+        info: {
+          name: '田中太郎',
+          email: 'test_@example.com',
+        }
+      )
+    end
+
+    describe '#find_for_oauth' do
+      context '新規ユーザーの場合' do
+        it 'ユーザーが作成されること' do
+          expect { described_class.find_for_oauth(auth) }.to change(described_class, :count).by(1)
+        end
+      end
+
+      context '既存ユーザーの場合' do
+        before { described_class.find_for_oauth(auth) }
+
+        it 'ユーザーが作成されないこと' do
+          expect { described_class.find_for_oauth(auth) }.not_to change(described_class, :count)
+        end
+      end
+    end
+
+    describe '#assign_info' do
+      let(:user) { build(:user) }
+
+      it 'ユーザー情報が代入されること' do
+        user.assign_info(auth)
+        expect(user.uid).to eq 'test111'
+        expect(user.provider).to eq 'slack'
+        expect(user.name).to eq '田中太郎'
+        expect(user.email).to eq 'test_@example.com'
+        expect(user.password).to be_present
+      end
+    end
+  end
+
   describe 'callback' do
     describe 'check_role' do
       let(:role) { create(:role, id: 999) }

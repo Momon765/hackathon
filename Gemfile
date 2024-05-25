@@ -6,6 +6,8 @@ ruby '3.3.0'
 gem 'bootsnap', require: false
 gem 'dotenv-rails'
 gem 'importmap-rails'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-sign-in-with-slack'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.1.3', '>= 7.1.3.2'
@@ -15,8 +17,6 @@ gem 'slack-notifier'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
-gem 'omniauth-sign-in-with-slack'
-gem 'omniauth-rails_csrf_protection'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 gem 'vite_rails'
@@ -28,7 +28,6 @@ group :development, :test do
   gem 'dotenv'
   gem 'erb_lint'
   gem 'factory_bot_rails'
-  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-ast'
@@ -39,11 +38,11 @@ group :development, :test do
 end
 
 group :development do
-  gem 'ruby-lsp'
-  gem 'web-console'
-  gem 'pry-rails'
   gem 'pry-byebug'
   gem 'pry-doc'
+  gem 'pry-rails'
+  gem 'ruby-lsp'
+  gem 'web-console'
 end
 
 group :test do
