@@ -19,6 +19,7 @@
     "vite-plugin-stimulus-hmr": "^3.0.0"
   },
   "dependencies": {
+    "date-fns": "^3.6.0",
     "react-icons": "^5.2.1"
   }
 }
