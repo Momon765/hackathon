@@ -9,16 +9,22 @@ class ApplicationController < ActionController::Base
     attributes
   end
 
+  def role_replaced_attributes(role)
+    role_attr = role.attributes
+    department = role.department
+
+    replaced_attributes(role_attr, department)
+  end
+
   def user_replaced_attributes(user)
     user_attr = user.attributes
     role = user.role
-    department = user.role.department
     employment_type = user.employment_type
 
-    user_attr = replaced_attributes(user_attr, role)
     user_attr = replaced_attributes(user_attr, employment_type)
+    user_attr['role'] = role_replaced_attributes(role)
+    user_attr.delete('role_id')
 
-    user_attr['role'] = replaced_attributes(user_attr['role'], department)
     user_attr
   end
 
