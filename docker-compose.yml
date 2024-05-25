@@ -62,7 +62,11 @@ services:
 
   sidekiq:
     <<: *backend
-    command: which sidekiq >/dev/null 2>&1 && bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - postgres
+      - redis
+    command: bundle exec sidekiq -C config/sidekiq.yml
+#    command: which sidekiq >/dev/null 2>&1 && bundle exec sidekiq -C config/sidekiq.yml
 
   postgres:
     image: postgres:14.0
