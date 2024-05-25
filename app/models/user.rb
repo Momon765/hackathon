@@ -9,15 +9,15 @@ class User < ApplicationRecord
   }
 
   belongs_to :role, optional: true
-  belongs_to :employement_type
+  # belongs_to :employment_type
 
-  before_save :check_role
+  # before_save :check_role
 
   private
 
   # 研修生は役職を持たない
   # @return [void]
   def check_role
-    self.role_id = nil if employement_type_id == EmployementType.TRAINEE_ID
+    self.role_id = nil if employment_type_id == EmploymentType::TRAINEE_ID
   end
 end
