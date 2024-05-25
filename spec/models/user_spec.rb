@@ -33,6 +33,32 @@ RSpec.describe User, type: :model do
 
       it { expect(user).not_to be_valid }
     end
+
+    context 'uidが存在しない' do
+      let(:user) { build(:user, uid: '') }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'uidが重複している' do
+      before { create(:user, uid: 'test', provider: 'slack') }
+
+      let(:user) { build(:user, uid: 'test', provider: 'slack') }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'providerが存在しない' do
+      let(:user) { build(:user, provider: '') }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'プロフィール画像のURLが不正' do
+      let(:user) { build(:user, profile_image_url: 'invalid_url') }
+
+      it { expect(user).not_to be_valid }
+    end
   end
 
   describe 'callback' do

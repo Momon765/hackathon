@@ -5,6 +5,10 @@ FactoryBot.define do
     sequence(:name) { |n| "user#{n}" }
     sequence(:email) { |n| "test#{n}@example.com" }
     sex { :male }
+    password { 'password' }
+    uid { 'test' }
+    provider { 'slack' }
+    profile_image_url { 'http://example.com/image.jpg' }
     role
     employment_type
   end

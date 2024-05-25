@@ -7,6 +7,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :omniauthable
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true
+  validates :uid, presence: true, uniqueness: { scope: :provider }
+  validates :provider, presence: true
+  validates :profile_image_url, format: { with: URI.regexp(%w[http https]), allow_blank: true }
 
   enum sex: {
     unknown: 0,
