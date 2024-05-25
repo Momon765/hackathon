@@ -4,6 +4,10 @@ import { extendTheme } from "@chakra-ui/react";
 // 2. Call `extendTheme` and pass your custom values
 export const theme = extendTheme({
 	colors: {
+		background: "#EFF0F3",
+		backgroundLight: "#FFFFFE",
+		paragraph: "#2A2A2A",
+		divider: "#DDDDDD",
 		primary: {
 			50: "#ffeedd", // 50は非常に明るい色
 			100: "#ffdbba", // 100は明るい色
