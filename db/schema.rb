@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_035204) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_035324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,5 +34,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_035204) do
     t.index ["department_id"], name: "index_roles_on_department_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.integer "sex", default: 0, null: false
+    t.text "description"
+    t.bigint "role_id"
+    t.bigint "employment_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["employment_type_id"], name: "index_users_on_employment_type_id"
+    t.index ["role_id"], name: "index_users_on_role_id"
+  end
+
   add_foreign_key "roles", "departments"
+  add_foreign_key "users", "employment_types"
+  add_foreign_key "users", "roles"
 end
