@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_043341) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_080817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -84,6 +84,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_043341) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  create_table "users_events", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_users_events_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_users_events_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_users_events_on_user_id"
+  end
+
   add_foreign_key "events", "users", column: "owner_id"
   add_foreign_key "events_employment_types", "employment_types"
   add_foreign_key "events_employment_types", "events"
@@ -92,4 +102,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_043341) do
   add_foreign_key "roles", "departments"
   add_foreign_key "users", "employment_types"
   add_foreign_key "users", "roles"
+  add_foreign_key "users_events", "events"
+  add_foreign_key "users_events", "users"
 end
