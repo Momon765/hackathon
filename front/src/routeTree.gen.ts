@@ -18,21 +18,9 @@ import { Route as EventsRouteImport } from './routes/events/route'
 
 // Create Virtual Routes
 
-const HogeLazyImport = createFileRoute('/hoge')()
-const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
-
-const HogeLazyRoute = HogeLazyImport.update({
-  path: '/hoge',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/hoge.lazy').then((d) => d.Route))
-
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const HistoryRouteRoute = HistoryRouteImport.update({
   path: '/history',
@@ -74,20 +62,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/hoge': {
-      id: '/hoge'
-      path: '/hoge'
-      fullPath: '/hoge'
-      preLoaderRoute: typeof HogeLazyImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -97,8 +71,6 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   EventsRouteRoute,
   HistoryRouteRoute,
-  AboutLazyRoute,
-  HogeLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -111,9 +83,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
-        "/history",
-        "/about",
-        "/hoge"
+        "/history"
       ]
     },
     "/": {
@@ -124,12 +94,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/history": {
       "filePath": "history/route.tsx"
-    },
-    "/about": {
-      "filePath": "about.lazy.tsx"
-    },
-    "/hoge": {
-      "filePath": "hoge.lazy.tsx"
     }
   }
 }
