@@ -2,6 +2,6 @@
 
 require 'rails_helper'
 
-RSpec.describe EventEmploymentType, type: :model do
+RSpec.describe EventsEmploymentType, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

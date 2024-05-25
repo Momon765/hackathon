@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EventRole < ApplicationRecord
+class EventsRole < ApplicationRecord
   belongs_to :event
   belongs_to :role
 end
