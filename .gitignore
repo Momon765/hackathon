@@ -46,3 +46,6 @@ node_modules
 *.local
 
 .idea
+
+# Ignore VSCode Settings
+.vscode
