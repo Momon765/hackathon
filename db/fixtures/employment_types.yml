@@ -1,0 +1,15 @@
+employee:
+  id: 1
+  name: 社員
+intern:
+  id: 2
+  name: インターン
+trainee:
+  id: 3
+  name: 研修生
+parttime:
+  id: 4
+  name: アルバイト
+others:
+  id: 5
+  name: その他

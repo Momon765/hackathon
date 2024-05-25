@@ -1,0 +1,23 @@
+CHW:
+  id: 1
+  name: クラウドハウス労務
+
+CHR:
+  id: 2
+  name: クラウドハウス採用
+
+JH:
+  id: 3
+  name: ジョブハウス
+
+Corp:
+  id: 4
+  name: コーポレート
+
+Dev:
+  id: 5
+  name: 開発・開発/技術
+
+yakuin:
+  id: 6
+  name: 役員

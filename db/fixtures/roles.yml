@@ -1,0 +1,60 @@
+CHW_engineer:
+  department_id: 1
+  name: エンジニア
+CHW_sales:
+  department_id: 1
+  name: セールス
+CHW_marketing:
+  department_id: 1
+  name: マーケ
+CHW_sm:
+  department_id: 1
+  name: S&M
+CHW_cs:
+  department_id: 1
+  name: CS
+CHR_engineer:
+  department_id: 2
+  name: エンジニア
+CHR_sales:
+  department_id: 2
+  name: セールス
+CHR_marketing:
+  department_id: 2
+  name: マーケ
+CHR_sm:
+  department_id: 2
+  name: S&M
+CHR_cs:
+  department_id: 2
+  name: CS
+CHR_designer:
+  department_id: 2
+  name: デザイナー
+JH_engineer:
+  department_id: 3
+  name: エンジニア
+JH_sales:
+  department_id: 3
+  name: セールス
+JH_marketing:
+  department_id: 3
+  name: マーケ
+JH_sm:
+  department_id: 3
+  name: S&M
+JH_carrer:
+  department_id: 3
+  name: キャリア
+JH_writer:
+  department_id: 3
+  name: ライター
+Dev:
+  department_id: 5
+  name: 開発・開発/技術
+Corp:
+  department_id: 4
+  name: コーポレート
+yakuin:
+  department_id: 6
+  name: 役員
