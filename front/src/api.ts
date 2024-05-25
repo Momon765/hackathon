@@ -5,19 +5,10 @@
  * ハッカソンのスキーマ
  * OpenAPI spec version: 1.0.11
  */
-import * as axios from 'axios';
-import type {
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
-import {
-  faker
-} from '@faker-js/faker'
-import {
-  HttpResponse,
-  delay,
-  http
-} from 'msw'
+import * as axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import { faker } from "@faker-js/faker";
+import { HttpResponse, delay, http } from "msw";
 export interface JoinEventResponse {
   event?: Event;
 }
@@ -45,8 +36,8 @@ export interface GetRestaurantsResponse {
 /**
  * 0: 男性, 1: 女性, 2: その他
  */
-export type PutUserRequestSex = typeof PutUserRequestSex[keyof typeof PutUserRequestSex];
-
+export type PutUserRequestSex =
+  (typeof PutUserRequestSex)[keyof typeof PutUserRequestSex];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PutUserRequestSex = {
@@ -106,8 +97,7 @@ export interface ClientError {
 /**
  * 0: 男性, 1: 女性, 2: その他
  */
-export type UserSex = typeof UserSex[keyof typeof UserSex];
-
+export type UserSex = (typeof UserSex)[keyof typeof UserSex];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserSex = {
@@ -172,391 +162,1392 @@ export interface Event {
   users?: User[];
 }
 
-
-
-
-
-  /**
+/**
  * イベントの一覧を取得
  * @summary イベントの一覧を取得
  */
 export const getEvents = <TData = AxiosResponse<GetEventsResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/events`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/events`, options);
+};
 
 /**
  * イベントを作成
  * @summary イベントを作成
  */
 export const postEvent = <TData = AxiosResponse<GetEventResponse>>(
-    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `http://localhost:8000/events`,
-      postEventRequest,options
-    );
-  }
+  postEventRequest: PostEventRequest,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `http://localhost:8000/events`,
+    postEventRequest,
+    options,
+  );
+};
 
 /**
  * イベントの詳細を取得
  * @summary イベントの詳細を取得
  */
 export const getEvent = <TData = AxiosResponse<GetEventResponse>>(
-    eventId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/events/${eventId}`,options
-    );
-  }
+  eventId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/events/${eventId}`, options);
+};
 
 /**
  * イベントを更新
  * @summary イベントを更新
  */
 export const putEvent = <TData = AxiosResponse<GetEventResponse>>(
-    eventId: string,
-    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `http://localhost:8000/events/${eventId}`,
-      postEventRequest,options
-    );
-  }
+  eventId: string,
+  postEventRequest: PostEventRequest,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `http://localhost:8000/events/${eventId}`,
+    postEventRequest,
+    options,
+  );
+};
 
 /**
  * イベントを削除
  * @summary イベントを削除
  */
 export const deleteEvent = <TData = AxiosResponse<GetEventResponse>>(
-    eventId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.delete(
-      `http://localhost:8000/events/${eventId}`,options
-    );
-  }
+  eventId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.delete(
+    `http://localhost:8000/events/${eventId}`,
+    options,
+  );
+};
 
 /**
  * 特定のイベントに特定のユーザーが参加申し込みをします。
  * @summary イベントに参加申し込みをする
  */
 export const joinEvent = <TData = AxiosResponse<JoinEventResponse>>(
-    eventId: number,
-    joinEventRequest: JoinEventRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.post(
-      `http://localhost:8000/events/${eventId}/participants`,
-      joinEventRequest,options
-    );
-  }
+  eventId: number,
+  joinEventRequest: JoinEventRequest,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.post(
+    `http://localhost:8000/events/${eventId}/participants`,
+    joinEventRequest,
+    options,
+  );
+};
 
 /**
  * ユーザーの詳細を取得
  * @summary ユーザーの詳細を取得
  */
 export const getUser = <TData = AxiosResponse<GetUserResponse>>(
-    userId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/users/${userId}`,options
-    );
-  }
+  userId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/users/${userId}`, options);
+};
 
 /**
  * ユーザーを更新
  * @summary ユーザーを更新
  */
 export const putUser = <TData = AxiosResponse<GetUserResponse>>(
-    userId: string,
-    putUserRequest: PutUserRequest, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.put(
-      `http://localhost:8000/users/${userId}`,
-      putUserRequest,options
-    );
-  }
+  userId: string,
+  putUserRequest: PutUserRequest,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.put(
+    `http://localhost:8000/users/${userId}`,
+    putUserRequest,
+    options,
+  );
+};
 
 /**
  * レストランの一覧を取得
  * @summary レストランの一覧を取得
  */
 export const getRestaurants = <TData = AxiosResponse<GetRestaurantsResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/restaurants`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/restaurants`, options);
+};
 
 /**
  * 部署の一覧を取得
  * @summary 部署の一覧を取得
  */
 export const getDepartments = <TData = AxiosResponse<GetDepartmentsResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/departments`,options
-    );
-  }
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/departments`, options);
+};
 
 /**
  * 部署の役職の一覧を取得
  * @summary 部署の役職の一覧を取得
  */
 export const getRoles = <TData = AxiosResponse<GetRolesResponse>>(
-    departmentId: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/departments/${departmentId}/roles`,options
-    );
-  }
+  departmentId: string,
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(
+    `http://localhost:8000/departments/${departmentId}/roles`,
+    options,
+  );
+};
 
 /**
  * 雇用形態の一覧を取得
  * @summary 雇用形態の一覧を取得
  */
-export const getEmploymentTypes = <TData = AxiosResponse<GetEmploymentTypesResponse>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.default.get(
-      `http://localhost:8000/employment_types`,options
+export const getEmploymentTypes = <
+  TData = AxiosResponse<GetEmploymentTypesResponse>,
+>(
+  options?: AxiosRequestConfig,
+): Promise<TData> => {
+  return axios.default.get(`http://localhost:8000/employment_types`, options);
+};
+
+export type GetEventsResult = AxiosResponse<GetEventsResponse>;
+export type PostEventResult = AxiosResponse<GetEventResponse>;
+export type GetEventResult = AxiosResponse<GetEventResponse>;
+export type PutEventResult = AxiosResponse<GetEventResponse>;
+export type DeleteEventResult = AxiosResponse<GetEventResponse>;
+export type JoinEventResult = AxiosResponse<JoinEventResponse>;
+export type GetUserResult = AxiosResponse<GetUserResponse>;
+export type PutUserResult = AxiosResponse<GetUserResponse>;
+export type GetRestaurantsResult = AxiosResponse<GetRestaurantsResponse>;
+export type GetDepartmentsResult = AxiosResponse<GetDepartmentsResponse>;
+export type GetRolesResult = AxiosResponse<GetRolesResponse>;
+export type GetEmploymentTypesResult =
+  AxiosResponse<GetEmploymentTypesResponse>;
+
+export const getGetEventsResponseMock = (
+  overrideResponse: Partial<GetEventsResponse> = {},
+): GetEventsResponse => ({
+  events: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    communication_ch_id: faker.helpers.arrayElement([
+      faker.word.sample(),
+      undefined,
+    ]),
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    deadline: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    image_url: faker.word.sample(),
+    is_anonymous: faker.datatype.boolean(),
+    limit: faker.number.int({ min: undefined, max: undefined }),
+    organizer: {
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      email: faker.word.sample(),
+      employmentType: faker.helpers.arrayElement([
+        {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      id: faker.number.int({ min: undefined, max: undefined }),
+      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      name: faker.word.sample(),
+      role: faker.helpers.arrayElement([
+        {
+          department: {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      sex: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      slack_id: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+    },
+    restaurant: faker.helpers.arrayElement([
+      {
+        api_stored_id: faker.word.sample(),
+        id: faker.number.int({ min: undefined, max: undefined }),
+      },
+      undefined,
+    ]),
+    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    title: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    users: faker.helpers.arrayElement([
+      Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1,
+      ).map(() => ({
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      })),
+      undefined,
+    ]),
+  })),
+  ...overrideResponse,
+});
+
+export const getPostEventResponseMock = (
+  overrideResponse: Partial<GetEventResponse> = {},
+): GetEventResponse => ({
+  event: {
+    communication_ch_id: faker.helpers.arrayElement([
+      faker.word.sample(),
+      undefined,
+    ]),
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    deadline: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    image_url: faker.word.sample(),
+    is_anonymous: faker.datatype.boolean(),
+    limit: faker.number.int({ min: undefined, max: undefined }),
+    organizer: {
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      email: faker.word.sample(),
+      employmentType: faker.helpers.arrayElement([
+        {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      id: faker.number.int({ min: undefined, max: undefined }),
+      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      name: faker.word.sample(),
+      role: faker.helpers.arrayElement([
+        {
+          department: {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      sex: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      slack_id: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+    },
+    restaurant: faker.helpers.arrayElement([
+      {
+        api_stored_id: faker.word.sample(),
+        id: faker.number.int({ min: undefined, max: undefined }),
+      },
+      undefined,
+    ]),
+    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    title: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    users: faker.helpers.arrayElement([
+      Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1,
+      ).map(() => ({
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      })),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetEventResponseMock = (
+  overrideResponse: Partial<GetEventResponse> = {},
+): GetEventResponse => ({
+  event: {
+    communication_ch_id: faker.helpers.arrayElement([
+      faker.word.sample(),
+      undefined,
+    ]),
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    deadline: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    image_url: faker.word.sample(),
+    is_anonymous: faker.datatype.boolean(),
+    limit: faker.number.int({ min: undefined, max: undefined }),
+    organizer: {
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      email: faker.word.sample(),
+      employmentType: faker.helpers.arrayElement([
+        {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      id: faker.number.int({ min: undefined, max: undefined }),
+      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      name: faker.word.sample(),
+      role: faker.helpers.arrayElement([
+        {
+          department: {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      sex: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      slack_id: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+    },
+    restaurant: faker.helpers.arrayElement([
+      {
+        api_stored_id: faker.word.sample(),
+        id: faker.number.int({ min: undefined, max: undefined }),
+      },
+      undefined,
+    ]),
+    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    title: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    users: faker.helpers.arrayElement([
+      Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1,
+      ).map(() => ({
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      })),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getPutEventResponseMock = (
+  overrideResponse: Partial<GetEventResponse> = {},
+): GetEventResponse => ({
+  event: {
+    communication_ch_id: faker.helpers.arrayElement([
+      faker.word.sample(),
+      undefined,
+    ]),
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    deadline: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    image_url: faker.word.sample(),
+    is_anonymous: faker.datatype.boolean(),
+    limit: faker.number.int({ min: undefined, max: undefined }),
+    organizer: {
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      email: faker.word.sample(),
+      employmentType: faker.helpers.arrayElement([
+        {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      id: faker.number.int({ min: undefined, max: undefined }),
+      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      name: faker.word.sample(),
+      role: faker.helpers.arrayElement([
+        {
+          department: {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      sex: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      slack_id: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+    },
+    restaurant: faker.helpers.arrayElement([
+      {
+        api_stored_id: faker.word.sample(),
+        id: faker.number.int({ min: undefined, max: undefined }),
+      },
+      undefined,
+    ]),
+    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    title: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    users: faker.helpers.arrayElement([
+      Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1,
+      ).map(() => ({
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      })),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getDeleteEventResponseMock = (
+  overrideResponse: Partial<GetEventResponse> = {},
+): GetEventResponse => ({
+  event: {
+    communication_ch_id: faker.helpers.arrayElement([
+      faker.word.sample(),
+      undefined,
+    ]),
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    deadline: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    image_url: faker.word.sample(),
+    is_anonymous: faker.datatype.boolean(),
+    limit: faker.number.int({ min: undefined, max: undefined }),
+    organizer: {
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      email: faker.word.sample(),
+      employmentType: faker.helpers.arrayElement([
+        {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      id: faker.number.int({ min: undefined, max: undefined }),
+      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      name: faker.word.sample(),
+      role: faker.helpers.arrayElement([
+        {
+          department: {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        undefined,
+      ]),
+      sex: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      slack_id: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+    },
+    restaurant: faker.helpers.arrayElement([
+      {
+        api_stored_id: faker.word.sample(),
+        id: faker.number.int({ min: undefined, max: undefined }),
+      },
+      undefined,
+    ]),
+    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+    title: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    users: faker.helpers.arrayElement([
+      Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1,
+      ).map(() => ({
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      })),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getJoinEventResponseMock = (
+  overrideResponse: Partial<JoinEventResponse> = {},
+): JoinEventResponse => ({
+  event: faker.helpers.arrayElement([
+    {
+      communication_ch_id: faker.helpers.arrayElement([
+        faker.word.sample(),
+        undefined,
+      ]),
+      created_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      deadline: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+      end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+      image_url: faker.word.sample(),
+      is_anonymous: faker.datatype.boolean(),
+      limit: faker.number.int({ min: undefined, max: undefined }),
+      organizer: {
+        created_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+        description: faker.helpers.arrayElement([
+          faker.word.sample(),
+          undefined,
+        ]),
+        email: faker.word.sample(),
+        employmentType: faker.helpers.arrayElement([
+          {
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        id: faker.number.int({ min: undefined, max: undefined }),
+        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+        name: faker.word.sample(),
+        role: faker.helpers.arrayElement([
+          {
+            department: {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            id: faker.number.int({ min: undefined, max: undefined }),
+            name: faker.word.sample(),
+          },
+          undefined,
+        ]),
+        sex: faker.helpers.arrayElement([
+          faker.number.int({ min: undefined, max: undefined }),
+          undefined,
+        ]),
+        slack_id: faker.word.sample(),
+        updated_at: faker.helpers.arrayElement([
+          `${faker.date.past().toISOString().split(".")[0]}Z`,
+          undefined,
+        ]),
+      },
+      restaurant: faker.helpers.arrayElement([
+        {
+          api_stored_id: faker.word.sample(),
+          id: faker.number.int({ min: undefined, max: undefined }),
+        },
+        undefined,
+      ]),
+      start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
+      title: faker.word.sample(),
+      updated_at: faker.helpers.arrayElement([
+        `${faker.date.past().toISOString().split(".")[0]}Z`,
+        undefined,
+      ]),
+      users: faker.helpers.arrayElement([
+        Array.from(
+          { length: faker.number.int({ min: 1, max: 10 }) },
+          (_, i) => i + 1,
+        ).map(() => ({
+          created_at: faker.helpers.arrayElement([
+            `${faker.date.past().toISOString().split(".")[0]}Z`,
+            undefined,
+          ]),
+          description: faker.helpers.arrayElement([
+            faker.word.sample(),
+            undefined,
+          ]),
+          email: faker.word.sample(),
+          employmentType: faker.helpers.arrayElement([
+            {
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            undefined,
+          ]),
+          id: faker.number.int({ min: undefined, max: undefined }),
+          image_url: faker.helpers.arrayElement([
+            faker.word.sample(),
+            undefined,
+          ]),
+          name: faker.word.sample(),
+          role: faker.helpers.arrayElement([
+            {
+              department: {
+                id: faker.number.int({ min: undefined, max: undefined }),
+                name: faker.word.sample(),
+              },
+              id: faker.number.int({ min: undefined, max: undefined }),
+              name: faker.word.sample(),
+            },
+            undefined,
+          ]),
+          sex: faker.helpers.arrayElement([
+            faker.number.int({ min: undefined, max: undefined }),
+            undefined,
+          ]),
+          slack_id: faker.word.sample(),
+          updated_at: faker.helpers.arrayElement([
+            `${faker.date.past().toISOString().split(".")[0]}Z`,
+            undefined,
+          ]),
+        })),
+        undefined,
+      ]),
+    },
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getGetUserResponseMock = (
+  overrideResponse: Partial<GetUserResponse> = {},
+): GetUserResponse => ({
+  user: {
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    email: faker.word.sample(),
+    employmentType: faker.helpers.arrayElement([
+      {
+        id: faker.number.int({ min: undefined, max: undefined }),
+        name: faker.word.sample(),
+      },
+      undefined,
+    ]),
+    id: faker.number.int({ min: undefined, max: undefined }),
+    image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    name: faker.word.sample(),
+    role: faker.helpers.arrayElement([
+      {
+        department: {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        id: faker.number.int({ min: undefined, max: undefined }),
+        name: faker.word.sample(),
+      },
+      undefined,
+    ]),
+    sex: faker.helpers.arrayElement([
+      faker.number.int({ min: undefined, max: undefined }),
+      undefined,
+    ]),
+    slack_id: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getPutUserResponseMock = (
+  overrideResponse: Partial<GetUserResponse> = {},
+): GetUserResponse => ({
+  user: {
+    created_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    email: faker.word.sample(),
+    employmentType: faker.helpers.arrayElement([
+      {
+        id: faker.number.int({ min: undefined, max: undefined }),
+        name: faker.word.sample(),
+      },
+      undefined,
+    ]),
+    id: faker.number.int({ min: undefined, max: undefined }),
+    image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
+    name: faker.word.sample(),
+    role: faker.helpers.arrayElement([
+      {
+        department: {
+          id: faker.number.int({ min: undefined, max: undefined }),
+          name: faker.word.sample(),
+        },
+        id: faker.number.int({ min: undefined, max: undefined }),
+        name: faker.word.sample(),
+      },
+      undefined,
+    ]),
+    sex: faker.helpers.arrayElement([
+      faker.number.int({ min: undefined, max: undefined }),
+      undefined,
+    ]),
+    slack_id: faker.word.sample(),
+    updated_at: faker.helpers.arrayElement([
+      `${faker.date.past().toISOString().split(".")[0]}Z`,
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetRestaurantsResponseMock = (
+  overrideResponse: Partial<GetRestaurantsResponse> = {},
+): GetRestaurantsResponse => ({
+  restaurants: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    api_stored_id: faker.word.sample(),
+    id: faker.number.int({ min: undefined, max: undefined }),
+  })),
+  ...overrideResponse,
+});
+
+export const getGetDepartmentsResponseMock = (
+  overrideResponse: Partial<GetDepartmentsResponse> = {},
+): GetDepartmentsResponse => ({
+  departments: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    id: faker.number.int({ min: undefined, max: undefined }),
+    name: faker.word.sample(),
+  })),
+  ...overrideResponse,
+});
+
+export const getGetRolesResponseMock = (
+  overrideResponse: Partial<GetRolesResponse> = {},
+): GetRolesResponse => ({
+  roles: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    department: {
+      id: faker.number.int({ min: undefined, max: undefined }),
+      name: faker.word.sample(),
+    },
+    id: faker.number.int({ min: undefined, max: undefined }),
+    name: faker.word.sample(),
+  })),
+  ...overrideResponse,
+});
+
+export const getGetEmploymentTypesResponseMock = (
+  overrideResponse: Partial<GetEmploymentTypesResponse> = {},
+): GetEmploymentTypesResponse => ({
+  employmentTypes: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    id: faker.number.int({ min: undefined, max: undefined }),
+    name: faker.word.sample(),
+  })),
+  ...overrideResponse,
+});
+
+export const getGetEventsMockHandler = (
+  overrideResponse?:
+    | GetEventsResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetEventsResponse),
+) => {
+  return http.get("*/events", async (info) => {
+    await delay(1000);
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetEventsResponseMock(),
+      ),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
     );
-  }
+  });
+};
 
-export type GetEventsResult = AxiosResponse<GetEventsResponse>
-export type PostEventResult = AxiosResponse<GetEventResponse>
-export type GetEventResult = AxiosResponse<GetEventResponse>
-export type PutEventResult = AxiosResponse<GetEventResponse>
-export type DeleteEventResult = AxiosResponse<GetEventResponse>
-export type JoinEventResult = AxiosResponse<JoinEventResponse>
-export type GetUserResult = AxiosResponse<GetUserResponse>
-export type PutUserResult = AxiosResponse<GetUserResponse>
-export type GetRestaurantsResult = AxiosResponse<GetRestaurantsResponse>
-export type GetDepartmentsResult = AxiosResponse<GetDepartmentsResponse>
-export type GetRolesResult = AxiosResponse<GetRolesResponse>
-export type GetEmploymentTypesResult = AxiosResponse<GetEmploymentTypesResponse>
-
-
-export const getGetEventsResponseMock = (overrideResponse: Partial< GetEventsResponse > = {}): GetEventsResponse => ({events: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])})), ...overrideResponse})
-
-export const getPostEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
-
-export const getGetEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
-
-export const getPutEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
-
-export const getDeleteEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
-
-export const getJoinEventResponseMock = (overrideResponse: Partial< JoinEventResponse > = {}): JoinEventResponse => ({event: faker.helpers.arrayElement([{communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, undefined]), ...overrideResponse})
-
-export const getGetUserResponseMock = (overrideResponse: Partial< GetUserResponse > = {}): GetUserResponse => ({user: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, ...overrideResponse})
-
-export const getPutUserResponseMock = (overrideResponse: Partial< GetUserResponse > = {}): GetUserResponse => ({user: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, ...overrideResponse})
-
-export const getGetRestaurantsResponseMock = (overrideResponse: Partial< GetRestaurantsResponse > = {}): GetRestaurantsResponse => ({restaurants: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})})), ...overrideResponse})
-
-export const getGetDepartmentsResponseMock = (overrideResponse: Partial< GetDepartmentsResponse > = {}): GetDepartmentsResponse => ({departments: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
-
-export const getGetRolesResponseMock = (overrideResponse: Partial< GetRolesResponse > = {}): GetRolesResponse => ({roles: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
-
-export const getGetEmploymentTypesResponseMock = (overrideResponse: Partial< GetEmploymentTypesResponse > = {}): GetEmploymentTypesResponse => ({employmentTypes: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
-
-
-export const getGetEventsMockHandler = (overrideResponse?: GetEventsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEventsResponse)) => {
-  return http.get('*/events', async (info) => {
+export const getPostEventMockHandler = (
+  overrideResponse?:
+    | GetEventResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => GetEventResponse),
+) => {
+  return http.post("*/events", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetEventsResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getPostEventResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getPostEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => GetEventResponse)) => {
-  return http.post('*/events', async (info) => {
+export const getGetEventMockHandler = (
+  overrideResponse?:
+    | GetEventResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetEventResponse),
+) => {
+  return http.get("*/events/:eventId", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getPostEventResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetEventResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getGetEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEventResponse)) => {
-  return http.get('*/events/:eventId', async (info) => {
+export const getPutEventMockHandler = (
+  overrideResponse?:
+    | GetEventResponse
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0],
+      ) => GetEventResponse),
+) => {
+  return http.put("*/events/:eventId", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetEventResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getPutEventResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getPutEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => GetEventResponse)) => {
-  return http.put('*/events/:eventId', async (info) => {
+export const getDeleteEventMockHandler = (
+  overrideResponse?:
+    | GetEventResponse
+    | ((
+        info: Parameters<Parameters<typeof http.delete>[1]>[0],
+      ) => GetEventResponse),
+) => {
+  return http.delete("*/events/:eventId", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getPutEventResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getDeleteEventResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getDeleteEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => GetEventResponse)) => {
-  return http.delete('*/events/:eventId', async (info) => {
+export const getJoinEventMockHandler = (
+  overrideResponse?:
+    | JoinEventResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => JoinEventResponse),
+) => {
+  return http.post("*/events/:eventId/participants", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getDeleteEventResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getJoinEventResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getJoinEventMockHandler = (overrideResponse?: JoinEventResponse | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => JoinEventResponse)) => {
-  return http.post('*/events/:eventId/participants', async (info) => {
+export const getGetUserMockHandler = (
+  overrideResponse?:
+    | GetUserResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetUserResponse),
+) => {
+  return http.get("*/users/:userId", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getJoinEventResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetUserResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getGetUserMockHandler = (overrideResponse?: GetUserResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetUserResponse)) => {
-  return http.get('*/users/:userId', async (info) => {
+export const getPutUserMockHandler = (
+  overrideResponse?:
+    | GetUserResponse
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0],
+      ) => GetUserResponse),
+) => {
+  return http.put("*/users/:userId", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetUserResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getPutUserResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getPutUserMockHandler = (overrideResponse?: GetUserResponse | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => GetUserResponse)) => {
-  return http.put('*/users/:userId', async (info) => {
+export const getGetRestaurantsMockHandler = (
+  overrideResponse?:
+    | GetRestaurantsResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetRestaurantsResponse),
+) => {
+  return http.get("*/restaurants", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getPutUserResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetRestaurantsResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getGetRestaurantsMockHandler = (overrideResponse?: GetRestaurantsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetRestaurantsResponse)) => {
-  return http.get('*/restaurants', async (info) => {
+export const getGetDepartmentsMockHandler = (
+  overrideResponse?:
+    | GetDepartmentsResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetDepartmentsResponse),
+) => {
+  return http.get("*/departments", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetRestaurantsResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetDepartmentsResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getGetDepartmentsMockHandler = (overrideResponse?: GetDepartmentsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetDepartmentsResponse)) => {
-  return http.get('*/departments', async (info) => {
+export const getGetRolesMockHandler = (
+  overrideResponse?:
+    | GetRolesResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetRolesResponse),
+) => {
+  return http.get("*/departments/:departmentId/roles", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetDepartmentsResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetRolesResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 
-export const getGetRolesMockHandler = (overrideResponse?: GetRolesResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetRolesResponse)) => {
-  return http.get('*/departments/:departmentId/roles', async (info) => {
+export const getGetEmploymentTypesMockHandler = (
+  overrideResponse?:
+    | GetEmploymentTypesResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => GetEmploymentTypesResponse),
+) => {
+  return http.get("*/employment_types", async (info) => {
     await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetRolesResponseMock()),
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? overrideResponse(info)
+            : overrideResponse
+          : getGetEmploymentTypesResponseMock(),
+      ),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
-
-export const getGetEmploymentTypesMockHandler = (overrideResponse?: GetEmploymentTypesResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEmploymentTypesResponse)) => {
-  return http.get('*/employment_types', async (info) => {
-    await delay(1000);
-    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
-            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
-            : getGetEmploymentTypesResponseMock()),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      }
-    )
-  })
-}
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  });
+};
 export const getGohanSchemaMock = () => [
   getGetEventsMockHandler(),
   getPostEventMockHandler(),
@@ -569,4 +1560,5 @@ export const getGohanSchemaMock = () => [
   getGetRestaurantsMockHandler(),
   getGetDepartmentsMockHandler(),
   getGetRolesMockHandler(),
-  getGetEmploymentTypesMockHandler()]
+  getGetEmploymentTypesMockHandler(),
+];
