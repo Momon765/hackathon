@@ -21,5 +21,10 @@
   "dependencies": {
     "date-fns": "^3.6.0",
     "react-icons": "^5.2.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

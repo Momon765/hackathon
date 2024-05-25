@@ -30,6 +30,7 @@ export const Header = (props: Props) => {
       top={0}
       left={0}
       right={0}
+      zIndex={1}
       sx={{
         borderBottom: "1px solid",
         borderColor: "divider",

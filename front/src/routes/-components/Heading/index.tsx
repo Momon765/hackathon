@@ -6,7 +6,7 @@ type Props = {
 
 export const Heading = (props: Props) => {
   return (
-    <Box paddingBlock={2}>
+    <Box pt={4} pb={6}>
       <Text
         fontSize="xl"
         fontWeight="bold"

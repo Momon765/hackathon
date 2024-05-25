@@ -5,10 +5,33 @@
  * ハッカソンのスキーマ
  * OpenAPI spec version: 1.0.11
  */
-import * as axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
-import { faker } from "@faker-js/faker";
-import { HttpResponse, delay, http } from "msw";
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query'
+import type {
+  MutationFunction,
+  QueryFunction,
+  QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
+} from '@tanstack/react-query'
+import * as axios from 'axios';
+import type {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios'
+import {
+  faker
+} from '@faker-js/faker'
+import {
+  HttpResponse,
+  delay,
+  http
+} from 'msw'
 export interface JoinEventResponse {
   event?: Event;
 }
@@ -36,8 +59,8 @@ export interface GetRestaurantsResponse {
 /**
  * 0: 男性, 1: 女性, 2: その他
  */
-export type PutUserRequestSex =
-  (typeof PutUserRequestSex)[keyof typeof PutUserRequestSex];
+export type PutUserRequestSex = typeof PutUserRequestSex[keyof typeof PutUserRequestSex];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PutUserRequestSex = {
@@ -97,7 +120,8 @@ export interface ClientError {
 /**
  * 0: 男性, 1: 女性, 2: その他
  */
-export type UserSex = (typeof UserSex)[keyof typeof UserSex];
+export type UserSex = typeof UserSex[keyof typeof UserSex];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserSex = {
@@ -151,6 +175,7 @@ export interface Event {
   deadline?: string;
   description?: string;
   end_date: string;
+  id?: number;
   image_url: string;
   is_anonymous: boolean;
   limit: number;
@@ -162,1392 +187,930 @@ export interface Event {
   users?: User[];
 }
 
+
+
+
+
 /**
  * イベントの一覧を取得
  * @summary イベントの一覧を取得
  */
-export const getEvents = <TData = AxiosResponse<GetEventsResponse>>(
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/events`, options);
-};
+export const getEvents = (
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventsResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/events`,options
+    );
+  }
+
+
+export const getGetEventsQueryKey = () => {
+    return [`http://localhost:5173/events`] as const;
+    }
+
+    
+export const getGetEventsQueryOptions = <TData = Awaited<ReturnType<typeof getEvents>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEventsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvents>>> = ({ signal }) => getEvents({ signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEventsQueryResult = NonNullable<Awaited<ReturnType<typeof getEvents>>>
+export type GetEventsQueryError = AxiosError<unknown>
+
+/**
+ * @summary イベントの一覧を取得
+ */
+export const useGetEvents = <TData = Awaited<ReturnType<typeof getEvents>>, TError = AxiosError<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetEventsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * イベントを作成
  * @summary イベントを作成
  */
-export const postEvent = <TData = AxiosResponse<GetEventResponse>>(
-  postEventRequest: PostEventRequest,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.post(
-    `http://localhost:8000/events`,
-    postEventRequest,
-    options,
-  );
-};
+export const postEvent = (
+    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.post(
+      `http://localhost:5173/events`,
+      postEventRequest,options
+    );
+  }
 
+
+
+export const getPostEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext> => {
+const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEvent>>, {data: PostEventRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postEvent(data,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostEventMutationResult = NonNullable<Awaited<ReturnType<typeof postEvent>>>
+    export type PostEventMutationBody = PostEventRequest
+    export type PostEventMutationError = AxiosError<ClientError | ServerError>
+
+    /**
+ * @summary イベントを作成
+ */
+export const usePostEvent = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postEvent>>,
+        TError,
+        {data: PostEventRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPostEventMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * イベントの詳細を取得
  * @summary イベントの詳細を取得
  */
-export const getEvent = <TData = AxiosResponse<GetEventResponse>>(
-  eventId: string,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/events/${eventId}`, options);
-};
+export const getEvent = (
+    eventId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/events/${eventId}`,options
+    );
+  }
+
+
+export const getGetEventQueryKey = (eventId: string,) => {
+    return [`http://localhost:5173/events/${eventId}`] as const;
+    }
+
+    
+export const getGetEventQueryOptions = <TData = Awaited<ReturnType<typeof getEvent>>, TError = AxiosError<ClientError | ServerError>>(eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEventQueryKey(eventId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvent>>> = ({ signal }) => getEvent(eventId, { signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(eventId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEventQueryResult = NonNullable<Awaited<ReturnType<typeof getEvent>>>
+export type GetEventQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary イベントの詳細を取得
+ */
+export const useGetEvent = <TData = Awaited<ReturnType<typeof getEvent>>, TError = AxiosError<ClientError | ServerError>>(
+ eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetEventQueryOptions(eventId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * イベントを更新
  * @summary イベントを更新
  */
-export const putEvent = <TData = AxiosResponse<GetEventResponse>>(
-  eventId: string,
-  postEventRequest: PostEventRequest,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.put(
-    `http://localhost:8000/events/${eventId}`,
-    postEventRequest,
-    options,
-  );
-};
+export const putEvent = (
+    eventId: string,
+    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.put(
+      `http://localhost:5173/events/${eventId}`,
+      postEventRequest,options
+    );
+  }
 
+
+
+export const getPutEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext> => {
+const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putEvent>>, {eventId: string;data: PostEventRequest}> = (props) => {
+          const {eventId,data} = props ?? {};
+
+          return  putEvent(eventId,data,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutEventMutationResult = NonNullable<Awaited<ReturnType<typeof putEvent>>>
+    export type PutEventMutationBody = PostEventRequest
+    export type PutEventMutationError = AxiosError<ClientError | ServerError>
+
+    /**
+ * @summary イベントを更新
+ */
+export const usePutEvent = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationResult<
+        Awaited<ReturnType<typeof putEvent>>,
+        TError,
+        {eventId: string;data: PostEventRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPutEventMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * イベントを削除
  * @summary イベントを削除
  */
-export const deleteEvent = <TData = AxiosResponse<GetEventResponse>>(
-  eventId: string,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.delete(
-    `http://localhost:8000/events/${eventId}`,
-    options,
-  );
-};
+export const deleteEvent = (
+    eventId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.delete(
+      `http://localhost:5173/events/${eventId}`,options
+    );
+  }
 
+
+
+export const getDeleteEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext> => {
+const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEvent>>, {eventId: string}> = (props) => {
+          const {eventId} = props ?? {};
+
+          return  deleteEvent(eventId,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteEventMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEvent>>>
+    
+    export type DeleteEventMutationError = AxiosError<ClientError | ServerError>
+
+    /**
+ * @summary イベントを削除
+ */
+export const useDeleteEvent = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteEvent>>,
+        TError,
+        {eventId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteEventMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * 特定のイベントに特定のユーザーが参加申し込みをします。
  * @summary イベントに参加申し込みをする
  */
-export const joinEvent = <TData = AxiosResponse<JoinEventResponse>>(
-  eventId: number,
-  joinEventRequest: JoinEventRequest,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.post(
-    `http://localhost:8000/events/${eventId}/participants`,
-    joinEventRequest,
-    options,
-  );
-};
+export const joinEvent = (
+    eventId: number,
+    joinEventRequest: JoinEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<JoinEventResponse>> => {
+    
+    return axios.default.post(
+      `http://localhost:5173/events/${eventId}/participants`,
+      joinEventRequest,options
+    );
+  }
 
+
+
+export const getJoinEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext> => {
+const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof joinEvent>>, {eventId: number;data: JoinEventRequest}> = (props) => {
+          const {eventId,data} = props ?? {};
+
+          return  joinEvent(eventId,data,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type JoinEventMutationResult = NonNullable<Awaited<ReturnType<typeof joinEvent>>>
+    export type JoinEventMutationBody = JoinEventRequest
+    export type JoinEventMutationError = AxiosError<ClientError | ServerError>
+
+    /**
+ * @summary イベントに参加申し込みをする
+ */
+export const useJoinEvent = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationResult<
+        Awaited<ReturnType<typeof joinEvent>>,
+        TError,
+        {eventId: number;data: JoinEventRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getJoinEventMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * ユーザーの詳細を取得
  * @summary ユーザーの詳細を取得
  */
-export const getUser = <TData = AxiosResponse<GetUserResponse>>(
-  userId: string,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/users/${userId}`, options);
-};
+export const getUser = (
+    userId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetUserResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/users/${userId}`,options
+    );
+  }
+
+
+export const getGetUserQueryKey = (userId: string,) => {
+    return [`http://localhost:5173/users/${userId}`] as const;
+    }
+
+    
+export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = AxiosError<ClientError | ServerError>>(userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserQueryKey(userId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser(userId, { signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(userId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserQueryResult = NonNullable<Awaited<ReturnType<typeof getUser>>>
+export type GetUserQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary ユーザーの詳細を取得
+ */
+export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError = AxiosError<ClientError | ServerError>>(
+ userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetUserQueryOptions(userId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * ユーザーを更新
  * @summary ユーザーを更新
  */
-export const putUser = <TData = AxiosResponse<GetUserResponse>>(
-  userId: string,
-  putUserRequest: PutUserRequest,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.put(
-    `http://localhost:8000/users/${userId}`,
-    putUserRequest,
-    options,
-  );
-};
+export const putUser = (
+    userId: string,
+    putUserRequest: PutUserRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetUserResponse>> => {
+    
+    return axios.default.put(
+      `http://localhost:5173/users/${userId}`,
+      putUserRequest,options
+    );
+  }
 
+
+
+export const getPutUserMutationOptions = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext> => {
+const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putUser>>, {userId: string;data: PutUserRequest}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  putUser(userId,data,axiosOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutUserMutationResult = NonNullable<Awaited<ReturnType<typeof putUser>>>
+    export type PutUserMutationBody = PutUserRequest
+    export type PutUserMutationError = AxiosError<ClientError | ServerError>
+
+    /**
+ * @summary ユーザーを更新
+ */
+export const usePutUser = <TError = AxiosError<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext>, axios?: AxiosRequestConfig}
+): UseMutationResult<
+        Awaited<ReturnType<typeof putUser>>,
+        TError,
+        {userId: string;data: PutUserRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPutUserMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * レストランの一覧を取得
  * @summary レストランの一覧を取得
  */
-export const getRestaurants = <TData = AxiosResponse<GetRestaurantsResponse>>(
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/restaurants`, options);
-};
+export const getRestaurants = (
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetRestaurantsResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/restaurants`,options
+    );
+  }
+
+
+export const getGetRestaurantsQueryKey = () => {
+    return [`http://localhost:5173/restaurants`] as const;
+    }
+
+    
+export const getGetRestaurantsQueryOptions = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRestaurantsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRestaurants>>> = ({ signal }) => getRestaurants({ signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetRestaurantsQueryResult = NonNullable<Awaited<ReturnType<typeof getRestaurants>>>
+export type GetRestaurantsQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary レストランの一覧を取得
+ */
+export const useGetRestaurants = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = AxiosError<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetRestaurantsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * 部署の一覧を取得
  * @summary 部署の一覧を取得
  */
-export const getDepartments = <TData = AxiosResponse<GetDepartmentsResponse>>(
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/departments`, options);
-};
+export const getDepartments = (
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetDepartmentsResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/departments`,options
+    );
+  }
+
+
+export const getGetDepartmentsQueryKey = () => {
+    return [`http://localhost:5173/departments`] as const;
+    }
+
+    
+export const getGetDepartmentsQueryOptions = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDepartmentsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDepartments>>> = ({ signal }) => getDepartments({ signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDepartmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartments>>>
+export type GetDepartmentsQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary 部署の一覧を取得
+ */
+export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = AxiosError<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetDepartmentsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * 部署の役職の一覧を取得
  * @summary 部署の役職の一覧を取得
  */
-export const getRoles = <TData = AxiosResponse<GetRolesResponse>>(
-  departmentId: string,
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(
-    `http://localhost:8000/departments/${departmentId}/roles`,
-    options,
-  );
-};
+export const getRoles = (
+    departmentId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetRolesResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/departments/${departmentId}/roles`,options
+    );
+  }
+
+
+export const getGetRolesQueryKey = (departmentId: string,) => {
+    return [`http://localhost:5173/departments/${departmentId}/roles`] as const;
+    }
+
+    
+export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>(departmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRolesQueryKey(departmentId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles(departmentId, { signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(departmentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getRoles>>>
+export type GetRolesQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary 部署の役職の一覧を取得
+ */
+export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>(
+ departmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetRolesQueryOptions(departmentId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
 
 /**
  * 雇用形態の一覧を取得
  * @summary 雇用形態の一覧を取得
  */
-export const getEmploymentTypes = <
-  TData = AxiosResponse<GetEmploymentTypesResponse>,
->(
-  options?: AxiosRequestConfig,
-): Promise<TData> => {
-  return axios.default.get(`http://localhost:8000/employment_types`, options);
-};
+export const getEmploymentTypes = (
+     options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEmploymentTypesResponse>> => {
+    
+    return axios.default.get(
+      `http://localhost:5173/employment_types`,options
+    );
+  }
 
-export type GetEventsResult = AxiosResponse<GetEventsResponse>;
-export type PostEventResult = AxiosResponse<GetEventResponse>;
-export type GetEventResult = AxiosResponse<GetEventResponse>;
-export type PutEventResult = AxiosResponse<GetEventResponse>;
-export type DeleteEventResult = AxiosResponse<GetEventResponse>;
-export type JoinEventResult = AxiosResponse<JoinEventResponse>;
-export type GetUserResult = AxiosResponse<GetUserResponse>;
-export type PutUserResult = AxiosResponse<GetUserResponse>;
-export type GetRestaurantsResult = AxiosResponse<GetRestaurantsResponse>;
-export type GetDepartmentsResult = AxiosResponse<GetDepartmentsResponse>;
-export type GetRolesResult = AxiosResponse<GetRolesResponse>;
-export type GetEmploymentTypesResult =
-  AxiosResponse<GetEmploymentTypesResponse>;
 
-export const getGetEventsResponseMock = (
-  overrideResponse: Partial<GetEventsResponse> = {},
-): GetEventsResponse => ({
-  events: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    communication_ch_id: faker.helpers.arrayElement([
-      faker.word.sample(),
-      undefined,
-    ]),
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    deadline: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    image_url: faker.word.sample(),
-    is_anonymous: faker.datatype.boolean(),
-    limit: faker.number.int({ min: undefined, max: undefined }),
-    organizer: {
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      email: faker.word.sample(),
-      employmentType: faker.helpers.arrayElement([
-        {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      id: faker.number.int({ min: undefined, max: undefined }),
-      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      name: faker.word.sample(),
-      role: faker.helpers.arrayElement([
-        {
-          department: {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      sex: faker.helpers.arrayElement([
-        faker.number.int({ min: undefined, max: undefined }),
-        undefined,
-      ]),
-      slack_id: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-    },
-    restaurant: faker.helpers.arrayElement([
-      {
-        api_stored_id: faker.word.sample(),
-        id: faker.number.int({ min: undefined, max: undefined }),
-      },
-      undefined,
-    ]),
-    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    title: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    users: faker.helpers.arrayElement([
-      Array.from(
-        { length: faker.number.int({ min: 1, max: 10 }) },
-        (_, i) => i + 1,
-      ).map(() => ({
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      })),
-      undefined,
-    ]),
-  })),
-  ...overrideResponse,
-});
+export const getGetEmploymentTypesQueryKey = () => {
+    return [`http://localhost:5173/employment_types`] as const;
+    }
 
-export const getPostEventResponseMock = (
-  overrideResponse: Partial<GetEventResponse> = {},
-): GetEventResponse => ({
-  event: {
-    communication_ch_id: faker.helpers.arrayElement([
-      faker.word.sample(),
-      undefined,
-    ]),
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    deadline: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    image_url: faker.word.sample(),
-    is_anonymous: faker.datatype.boolean(),
-    limit: faker.number.int({ min: undefined, max: undefined }),
-    organizer: {
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      email: faker.word.sample(),
-      employmentType: faker.helpers.arrayElement([
-        {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      id: faker.number.int({ min: undefined, max: undefined }),
-      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      name: faker.word.sample(),
-      role: faker.helpers.arrayElement([
-        {
-          department: {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      sex: faker.helpers.arrayElement([
-        faker.number.int({ min: undefined, max: undefined }),
-        undefined,
-      ]),
-      slack_id: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-    },
-    restaurant: faker.helpers.arrayElement([
-      {
-        api_stored_id: faker.word.sample(),
-        id: faker.number.int({ min: undefined, max: undefined }),
-      },
-      undefined,
-    ]),
-    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    title: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    users: faker.helpers.arrayElement([
-      Array.from(
-        { length: faker.number.int({ min: 1, max: 10 }) },
-        (_, i) => i + 1,
-      ).map(() => ({
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      })),
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getGetEventResponseMock = (
-  overrideResponse: Partial<GetEventResponse> = {},
-): GetEventResponse => ({
-  event: {
-    communication_ch_id: faker.helpers.arrayElement([
-      faker.word.sample(),
-      undefined,
-    ]),
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    deadline: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    image_url: faker.word.sample(),
-    is_anonymous: faker.datatype.boolean(),
-    limit: faker.number.int({ min: undefined, max: undefined }),
-    organizer: {
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      email: faker.word.sample(),
-      employmentType: faker.helpers.arrayElement([
-        {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      id: faker.number.int({ min: undefined, max: undefined }),
-      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      name: faker.word.sample(),
-      role: faker.helpers.arrayElement([
-        {
-          department: {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      sex: faker.helpers.arrayElement([
-        faker.number.int({ min: undefined, max: undefined }),
-        undefined,
-      ]),
-      slack_id: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-    },
-    restaurant: faker.helpers.arrayElement([
-      {
-        api_stored_id: faker.word.sample(),
-        id: faker.number.int({ min: undefined, max: undefined }),
-      },
-      undefined,
-    ]),
-    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    title: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    users: faker.helpers.arrayElement([
-      Array.from(
-        { length: faker.number.int({ min: 1, max: 10 }) },
-        (_, i) => i + 1,
-      ).map(() => ({
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      })),
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getPutEventResponseMock = (
-  overrideResponse: Partial<GetEventResponse> = {},
-): GetEventResponse => ({
-  event: {
-    communication_ch_id: faker.helpers.arrayElement([
-      faker.word.sample(),
-      undefined,
-    ]),
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    deadline: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    image_url: faker.word.sample(),
-    is_anonymous: faker.datatype.boolean(),
-    limit: faker.number.int({ min: undefined, max: undefined }),
-    organizer: {
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      email: faker.word.sample(),
-      employmentType: faker.helpers.arrayElement([
-        {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      id: faker.number.int({ min: undefined, max: undefined }),
-      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      name: faker.word.sample(),
-      role: faker.helpers.arrayElement([
-        {
-          department: {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      sex: faker.helpers.arrayElement([
-        faker.number.int({ min: undefined, max: undefined }),
-        undefined,
-      ]),
-      slack_id: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-    },
-    restaurant: faker.helpers.arrayElement([
-      {
-        api_stored_id: faker.word.sample(),
-        id: faker.number.int({ min: undefined, max: undefined }),
-      },
-      undefined,
-    ]),
-    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    title: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    users: faker.helpers.arrayElement([
-      Array.from(
-        { length: faker.number.int({ min: 1, max: 10 }) },
-        (_, i) => i + 1,
-      ).map(() => ({
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      })),
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getDeleteEventResponseMock = (
-  overrideResponse: Partial<GetEventResponse> = {},
-): GetEventResponse => ({
-  event: {
-    communication_ch_id: faker.helpers.arrayElement([
-      faker.word.sample(),
-      undefined,
-    ]),
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    deadline: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    image_url: faker.word.sample(),
-    is_anonymous: faker.datatype.boolean(),
-    limit: faker.number.int({ min: undefined, max: undefined }),
-    organizer: {
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      email: faker.word.sample(),
-      employmentType: faker.helpers.arrayElement([
-        {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      id: faker.number.int({ min: undefined, max: undefined }),
-      image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      name: faker.word.sample(),
-      role: faker.helpers.arrayElement([
-        {
-          department: {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        undefined,
-      ]),
-      sex: faker.helpers.arrayElement([
-        faker.number.int({ min: undefined, max: undefined }),
-        undefined,
-      ]),
-      slack_id: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-    },
-    restaurant: faker.helpers.arrayElement([
-      {
-        api_stored_id: faker.word.sample(),
-        id: faker.number.int({ min: undefined, max: undefined }),
-      },
-      undefined,
-    ]),
-    start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-    title: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    users: faker.helpers.arrayElement([
-      Array.from(
-        { length: faker.number.int({ min: 1, max: 10 }) },
-        (_, i) => i + 1,
-      ).map(() => ({
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      })),
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getJoinEventResponseMock = (
-  overrideResponse: Partial<JoinEventResponse> = {},
-): JoinEventResponse => ({
-  event: faker.helpers.arrayElement([
-    {
-      communication_ch_id: faker.helpers.arrayElement([
-        faker.word.sample(),
-        undefined,
-      ]),
-      created_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      deadline: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-      end_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-      image_url: faker.word.sample(),
-      is_anonymous: faker.datatype.boolean(),
-      limit: faker.number.int({ min: undefined, max: undefined }),
-      organizer: {
-        created_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-        description: faker.helpers.arrayElement([
-          faker.word.sample(),
-          undefined,
-        ]),
-        email: faker.word.sample(),
-        employmentType: faker.helpers.arrayElement([
-          {
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        id: faker.number.int({ min: undefined, max: undefined }),
-        image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-        name: faker.word.sample(),
-        role: faker.helpers.arrayElement([
-          {
-            department: {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            id: faker.number.int({ min: undefined, max: undefined }),
-            name: faker.word.sample(),
-          },
-          undefined,
-        ]),
-        sex: faker.helpers.arrayElement([
-          faker.number.int({ min: undefined, max: undefined }),
-          undefined,
-        ]),
-        slack_id: faker.word.sample(),
-        updated_at: faker.helpers.arrayElement([
-          `${faker.date.past().toISOString().split(".")[0]}Z`,
-          undefined,
-        ]),
-      },
-      restaurant: faker.helpers.arrayElement([
-        {
-          api_stored_id: faker.word.sample(),
-          id: faker.number.int({ min: undefined, max: undefined }),
-        },
-        undefined,
-      ]),
-      start_date: `${faker.date.past().toISOString().split(".")[0]}Z`,
-      title: faker.word.sample(),
-      updated_at: faker.helpers.arrayElement([
-        `${faker.date.past().toISOString().split(".")[0]}Z`,
-        undefined,
-      ]),
-      users: faker.helpers.arrayElement([
-        Array.from(
-          { length: faker.number.int({ min: 1, max: 10 }) },
-          (_, i) => i + 1,
-        ).map(() => ({
-          created_at: faker.helpers.arrayElement([
-            `${faker.date.past().toISOString().split(".")[0]}Z`,
-            undefined,
-          ]),
-          description: faker.helpers.arrayElement([
-            faker.word.sample(),
-            undefined,
-          ]),
-          email: faker.word.sample(),
-          employmentType: faker.helpers.arrayElement([
-            {
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            undefined,
-          ]),
-          id: faker.number.int({ min: undefined, max: undefined }),
-          image_url: faker.helpers.arrayElement([
-            faker.word.sample(),
-            undefined,
-          ]),
-          name: faker.word.sample(),
-          role: faker.helpers.arrayElement([
-            {
-              department: {
-                id: faker.number.int({ min: undefined, max: undefined }),
-                name: faker.word.sample(),
-              },
-              id: faker.number.int({ min: undefined, max: undefined }),
-              name: faker.word.sample(),
-            },
-            undefined,
-          ]),
-          sex: faker.helpers.arrayElement([
-            faker.number.int({ min: undefined, max: undefined }),
-            undefined,
-          ]),
-          slack_id: faker.word.sample(),
-          updated_at: faker.helpers.arrayElement([
-            `${faker.date.past().toISOString().split(".")[0]}Z`,
-            undefined,
-          ]),
-        })),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getGetUserResponseMock = (
-  overrideResponse: Partial<GetUserResponse> = {},
-): GetUserResponse => ({
-  user: {
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    email: faker.word.sample(),
-    employmentType: faker.helpers.arrayElement([
-      {
-        id: faker.number.int({ min: undefined, max: undefined }),
-        name: faker.word.sample(),
-      },
-      undefined,
-    ]),
-    id: faker.number.int({ min: undefined, max: undefined }),
-    image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    name: faker.word.sample(),
-    role: faker.helpers.arrayElement([
-      {
-        department: {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        id: faker.number.int({ min: undefined, max: undefined }),
-        name: faker.word.sample(),
-      },
-      undefined,
-    ]),
-    sex: faker.helpers.arrayElement([
-      faker.number.int({ min: undefined, max: undefined }),
-      undefined,
-    ]),
-    slack_id: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getPutUserResponseMock = (
-  overrideResponse: Partial<GetUserResponse> = {},
-): GetUserResponse => ({
-  user: {
-    created_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-    description: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    email: faker.word.sample(),
-    employmentType: faker.helpers.arrayElement([
-      {
-        id: faker.number.int({ min: undefined, max: undefined }),
-        name: faker.word.sample(),
-      },
-      undefined,
-    ]),
-    id: faker.number.int({ min: undefined, max: undefined }),
-    image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]),
-    name: faker.word.sample(),
-    role: faker.helpers.arrayElement([
-      {
-        department: {
-          id: faker.number.int({ min: undefined, max: undefined }),
-          name: faker.word.sample(),
-        },
-        id: faker.number.int({ min: undefined, max: undefined }),
-        name: faker.word.sample(),
-      },
-      undefined,
-    ]),
-    sex: faker.helpers.arrayElement([
-      faker.number.int({ min: undefined, max: undefined }),
-      undefined,
-    ]),
-    slack_id: faker.word.sample(),
-    updated_at: faker.helpers.arrayElement([
-      `${faker.date.past().toISOString().split(".")[0]}Z`,
-      undefined,
-    ]),
-  },
-  ...overrideResponse,
-});
-
-export const getGetRestaurantsResponseMock = (
-  overrideResponse: Partial<GetRestaurantsResponse> = {},
-): GetRestaurantsResponse => ({
-  restaurants: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    api_stored_id: faker.word.sample(),
-    id: faker.number.int({ min: undefined, max: undefined }),
-  })),
-  ...overrideResponse,
-});
-
-export const getGetDepartmentsResponseMock = (
-  overrideResponse: Partial<GetDepartmentsResponse> = {},
-): GetDepartmentsResponse => ({
-  departments: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    id: faker.number.int({ min: undefined, max: undefined }),
-    name: faker.word.sample(),
-  })),
-  ...overrideResponse,
-});
-
-export const getGetRolesResponseMock = (
-  overrideResponse: Partial<GetRolesResponse> = {},
-): GetRolesResponse => ({
-  roles: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    department: {
-      id: faker.number.int({ min: undefined, max: undefined }),
-      name: faker.word.sample(),
-    },
-    id: faker.number.int({ min: undefined, max: undefined }),
-    name: faker.word.sample(),
-  })),
-  ...overrideResponse,
-});
-
-export const getGetEmploymentTypesResponseMock = (
-  overrideResponse: Partial<GetEmploymentTypesResponse> = {},
-): GetEmploymentTypesResponse => ({
-  employmentTypes: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    id: faker.number.int({ min: undefined, max: undefined }),
-    name: faker.word.sample(),
-  })),
-  ...overrideResponse,
-});
-
-export const getGetEventsMockHandler = (
-  overrideResponse?:
-    | GetEventsResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetEventsResponse),
+    
+export const getGetEmploymentTypesQueryOptions = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
-  return http.get("*/events", async (info) => {
+
+const {query: queryOptions, axios: axiosOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEmploymentTypesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEmploymentTypes>>> = ({ signal }) => getEmploymentTypes({ signal, ...axiosOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEmploymentTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getEmploymentTypes>>>
+export type GetEmploymentTypesQueryError = AxiosError<ClientError | ServerError>
+
+/**
+ * @summary 雇用形態の一覧を取得
+ */
+export const useGetEmploymentTypes = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = AxiosError<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, axios?: AxiosRequestConfig}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetEmploymentTypesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+
+export const getGetEventsResponseMock = (overrideResponse: Partial< GetEventsResponse > = {}): GetEventsResponse => ({events: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])})), ...overrideResponse})
+
+export const getPostEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+
+export const getGetEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+
+export const getPutEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+
+export const getDeleteEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+
+export const getJoinEventResponseMock = (overrideResponse: Partial< JoinEventResponse > = {}): JoinEventResponse => ({event: faker.helpers.arrayElement([{communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, undefined]), ...overrideResponse})
+
+export const getGetUserResponseMock = (overrideResponse: Partial< GetUserResponse > = {}): GetUserResponse => ({user: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, ...overrideResponse})
+
+export const getPutUserResponseMock = (overrideResponse: Partial< GetUserResponse > = {}): GetUserResponse => ({user: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, ...overrideResponse})
+
+export const getGetRestaurantsResponseMock = (overrideResponse: Partial< GetRestaurantsResponse > = {}): GetRestaurantsResponse => ({restaurants: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})})), ...overrideResponse})
+
+export const getGetDepartmentsResponseMock = (overrideResponse: Partial< GetDepartmentsResponse > = {}): GetDepartmentsResponse => ({departments: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
+
+export const getGetRolesResponseMock = (overrideResponse: Partial< GetRolesResponse > = {}): GetRolesResponse => ({roles: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
+
+export const getGetEmploymentTypesResponseMock = (overrideResponse: Partial< GetEmploymentTypesResponse > = {}): GetEmploymentTypesResponse => ({employmentTypes: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), ...overrideResponse})
+
+
+export const getGetEventsMockHandler = (overrideResponse?: GetEventsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEventsResponse)) => {
+  return http.get('*/events', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetEventsResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetEventsResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getPostEventMockHandler = (
-  overrideResponse?:
-    | GetEventResponse
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => GetEventResponse),
-) => {
-  return http.post("*/events", async (info) => {
+export const getPostEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => GetEventResponse)) => {
+  return http.post('*/events', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getPostEventResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getPostEventResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetEventMockHandler = (
-  overrideResponse?:
-    | GetEventResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetEventResponse),
-) => {
-  return http.get("*/events/:eventId", async (info) => {
+export const getGetEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEventResponse)) => {
+  return http.get('*/events/:eventId', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetEventResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetEventResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getPutEventMockHandler = (
-  overrideResponse?:
-    | GetEventResponse
-    | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0],
-      ) => GetEventResponse),
-) => {
-  return http.put("*/events/:eventId", async (info) => {
+export const getPutEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => GetEventResponse)) => {
+  return http.put('*/events/:eventId', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getPutEventResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getPutEventResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getDeleteEventMockHandler = (
-  overrideResponse?:
-    | GetEventResponse
-    | ((
-        info: Parameters<Parameters<typeof http.delete>[1]>[0],
-      ) => GetEventResponse),
-) => {
-  return http.delete("*/events/:eventId", async (info) => {
+export const getDeleteEventMockHandler = (overrideResponse?: GetEventResponse | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => GetEventResponse)) => {
+  return http.delete('*/events/:eventId', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getDeleteEventResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getDeleteEventResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getJoinEventMockHandler = (
-  overrideResponse?:
-    | JoinEventResponse
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => JoinEventResponse),
-) => {
-  return http.post("*/events/:eventId/participants", async (info) => {
+export const getJoinEventMockHandler = (overrideResponse?: JoinEventResponse | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => JoinEventResponse)) => {
+  return http.post('*/events/:eventId/participants', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getJoinEventResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getJoinEventResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetUserMockHandler = (
-  overrideResponse?:
-    | GetUserResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetUserResponse),
-) => {
-  return http.get("*/users/:userId", async (info) => {
+export const getGetUserMockHandler = (overrideResponse?: GetUserResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetUserResponse)) => {
+  return http.get('*/users/:userId', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetUserResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetUserResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getPutUserMockHandler = (
-  overrideResponse?:
-    | GetUserResponse
-    | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0],
-      ) => GetUserResponse),
-) => {
-  return http.put("*/users/:userId", async (info) => {
+export const getPutUserMockHandler = (overrideResponse?: GetUserResponse | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => GetUserResponse)) => {
+  return http.put('*/users/:userId', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getPutUserResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getPutUserResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetRestaurantsMockHandler = (
-  overrideResponse?:
-    | GetRestaurantsResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetRestaurantsResponse),
-) => {
-  return http.get("*/restaurants", async (info) => {
+export const getGetRestaurantsMockHandler = (overrideResponse?: GetRestaurantsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetRestaurantsResponse)) => {
+  return http.get('*/restaurants', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetRestaurantsResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetRestaurantsResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetDepartmentsMockHandler = (
-  overrideResponse?:
-    | GetDepartmentsResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetDepartmentsResponse),
-) => {
-  return http.get("*/departments", async (info) => {
+export const getGetDepartmentsMockHandler = (overrideResponse?: GetDepartmentsResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetDepartmentsResponse)) => {
+  return http.get('*/departments', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetDepartmentsResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetDepartmentsResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetRolesMockHandler = (
-  overrideResponse?:
-    | GetRolesResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetRolesResponse),
-) => {
-  return http.get("*/departments/:departmentId/roles", async (info) => {
+export const getGetRolesMockHandler = (overrideResponse?: GetRolesResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetRolesResponse)) => {
+  return http.get('*/departments/:departmentId/roles', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetRolesResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetRolesResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 
-export const getGetEmploymentTypesMockHandler = (
-  overrideResponse?:
-    | GetEmploymentTypesResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => GetEmploymentTypesResponse),
-) => {
-  return http.get("*/employment_types", async (info) => {
+export const getGetEmploymentTypesMockHandler = (overrideResponse?: GetEmploymentTypesResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetEmploymentTypesResponse)) => {
+  return http.get('*/employment_types', async (info) => {
     await delay(1000);
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? overrideResponse(info)
-            : overrideResponse
-          : getGetEmploymentTypesResponseMock(),
-      ),
+    return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
+            ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 
+            : getGetEmploymentTypesResponseMock()),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-  });
-};
+          'Content-Type': 'application/json',
+        }
+      }
+    )
+  })
+}
 export const getGohanSchemaMock = () => [
   getGetEventsMockHandler(),
   getPostEventMockHandler(),
@@ -1560,5 +1123,5 @@ export const getGohanSchemaMock = () => [
   getGetRestaurantsMockHandler(),
   getGetDepartmentsMockHandler(),
   getGetRolesMockHandler(),
-  getGetEmploymentTypesMockHandler(),
-];
+  getGetEmploymentTypesMockHandler()
+]
