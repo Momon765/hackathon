@@ -9,7 +9,7 @@ FactoryBot.define do
     description { 'イベント説明' }
     is_anonymous { false }
     limit { 5 }
-    owner_id { FactoryBot.create(:user).id }
+    organizer_id { FactoryBot.create(:user).id }
     scope_sex { 'no_scope' }
     communication_ch_id { 100 }
   end

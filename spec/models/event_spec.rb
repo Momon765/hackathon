@@ -117,17 +117,17 @@ RSpec.describe Event, type: :model do
       end
     end
 
-    describe 'owner_id' do
+    describe 'organizer_id' do
       it 'nilは有効であること' do
         event.limit = nil
         expect(event).to be_valid
       end
 
       it '同じ開催者で開催日時の範囲が重なるイベントが存在したら無効であること' do
-        owner = create(:user)
-        create(:event, owner_id: owner.id,
+        organizer = create(:user)
+        create(:event, organizer_id: organizer.id,
                 start_date: DateTime.new(2099, 6, 1, 12, 0), end_date: DateTime.new(2099, 6, 1, 14, 0))
-        new_event = build(:event, owner_id: owner.id,
+        new_event = build(:event, organizer_id: organizer.id,
                       start_date: DateTime.new(2099, 6, 1, 13, 0), end_date: DateTime.new(2099, 6, 1, 15, 0))
         expect(new_event).not_to be_valid
       end

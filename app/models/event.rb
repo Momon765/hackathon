@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
+  belongs_to :organizer, class_name: 'User'
   validates :title, presence: true, length: { maximum: 64 }
   validates :description, length: { maximum: 255 }
   validates :start_date, presence: true
@@ -44,14 +45,14 @@ class Event < ApplicationRecord
   end
 
   def never_overlap_date
-    return if start_date.nil? || end_date.nil? || owner_id.nil?
+    return if start_date.nil? || end_date.nil? || organizer_id.nil?
 
     events = if id.nil?
-               Event.where('owner_id = ? and end_date > ? and ? > start_date', owner_id, start_date, end_date)
+               Event.where('organizer_id = ? and end_date > ? and ? > start_date', organizer_id, start_date, end_date)
              else
-               Event.where('id != ? and owner_id = ? and end_date > ? and ? > start_date', id, owner_id, start_date, end_date)
+               Event.where('id != ? and organizer_id = ? and end_date > ? and ? > start_date', id, organizer_id, start_date, end_date)
              end
 
-    errors.add(:owner_id, '開催期間が重なるイベントが存在します') unless events.empty?
+    errors.add(:organizer_id, '開催期間が重なるイベントが存在します') unless events.empty?
   end
 end
