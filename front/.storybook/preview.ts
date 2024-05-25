@@ -1,13 +1,11 @@
 import type { Preview } from "@storybook/react";
-// .storybook/preview.js
+import { theme } from "../src/theme"; 
 
-// const theme = require('../path/to/your/theme')
-
-// export const parameters = {
-//   chakra: {
-//     theme,
-//   },
-// }
+export const parameters = {
+  chakra: {
+    theme,
+  },
+}
 
 const preview: Preview = {
   parameters: {
