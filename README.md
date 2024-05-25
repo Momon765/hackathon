@@ -65,3 +65,10 @@ docker compose up --build -d
  docker compose exec runner bundle exec rubocop
 ```
 
+## Model, Controllerの作成(例)
+```bash
+ docker compose exec runner bundle exec rails g model User name:string age:integer
+
+ docker compose exec runner bundle exec rails g controller Users index show
+```
+
