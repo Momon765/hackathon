@@ -1,0 +1,15 @@
+# Rails の I18n.t の引数に #{} 記法を使ってはいけないとするのをやめる
+I18n/GetText/DecorateStringFormattingUsingInterpolation:
+  Enabled: false
+
+# 同上
+I18n/RailsI18n/DecorateStringFormattingUsingInterpolation:
+  Enabled: false
+
+#
+I18n/RailsI18n/DecorateString:
+  Enabled: false
+
+#
+I18n/GetText:
+  Enabled: false

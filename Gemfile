@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '3.3.0'
@@ -6,8 +8,8 @@ gem 'importmap-rails'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.1.3', '>= 7.1.3.2'
-gem 'sidekiq', '~> 7.2', '>= 7.2.1'
 gem 'redis', '~> 5.1', '>= 5.1.0'
+gem 'sidekiq', '~> 7.2', '>= 7.2.1'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'

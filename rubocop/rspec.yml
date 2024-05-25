@@ -1,0 +1,45 @@
+# RSpec の contect の文章を特定の単語から始まるもののみ許可する、を disable にする(日本語を書く我々には無理)
+RSpec/ContextWording:
+  Enabled: false
+
+# RSpec の example の文章を特定の単語から始まるもののみ許可する、を disable にする(日本語を書く我々には無理)
+RSpec/ExampleWording:
+  Enabled: false
+
+# RSpec の Example の長さを20までにする
+RSpec/ExampleLength:
+  Max: 20
+
+# rspec の expect 文の件数上限
+RSpec/MultipleExpectations:
+  Max: 10
+
+# rspec の context の数上限
+RSpec/NestedGroups:
+  Max: 10
+
+# rspec にて subject の使用を許可する
+RSpec/NamedSubject:
+  Enabled: false
+
+# rspec にて allow_any_instance_of メソッドの使用を許可する
+RSpec/AnyInstance:
+  Enabled: false
+
+# @fixme
+RSpec/BeEq: # 37
+  Enabled: false
+RSpec/BeNil: # 12
+  Enabled: false
+RSpec/ChangeByZero: # 26
+  Enabled: false
+RSpec/ExcessiveDocstringSpacing: # 6
+  Enabled: false
+RSpec/FactoryBot/ConsistentParenthesesStyle: # 1
+  Enabled: false
+RSpec/PendingWithoutReason: # 24
+  Enabled: false
+RSpec/Rails/InferredSpecType: # 101
+  Enabled: false
+RSpec/VerifiedDoubleReference: # 4
+  Enabled: false

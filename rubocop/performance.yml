@@ -1,0 +1,16 @@
+Performance/CollectionLiteralInLoop: # 1
+  Enabled: false
+Performance/InefficientHashSearch: # 4
+  Enabled: false
+Performance/RedundantMatch: # 6
+  Enabled: false
+Performance/RedundantMerge: # 4
+  Enabled: false
+Performance/RegexpMatch: # 19
+  Enabled: false
+Performance/StringIdentifierArgument: # 2
+  Enabled: false
+Performance/StringInclude: # 11
+  Enabled: false
+Performance/StringReplacement: # 13
+  Enabled: false

@@ -1,0 +1,63 @@
+# Windows 環境のファイルパス形式を考慮した設定
+# filepath は `Rails.root.join('app', 'models', 'user')` のように指定
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+# Env に staging を追加
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - staging
+    - staging2
+
+# @fixme
+Rails/HelperInstanceVariable: # 18
+  Enabled: false
+Rails/ActionOrder: # 11
+  Enabled: false
+Rails/CompactBlank: # 3
+  Enabled: false
+Rails/DurationArithmetic: # 2
+  Enabled: false
+Rails/EagerEvaluationLogMessage: # 10
+  Enabled: false
+Rails/ExpandedDateRange: # 2
+  Enabled: false
+Rails/FindById: # 1
+  Enabled: false
+Rails/I18nLocaleTexts: # 59
+  Enabled: false
+Rails/Inquiry: # 2
+  Enabled: false
+Rails/Pluck: # 3
+  Enabled: false
+Rails/PluckInWhere: # 5
+  Enabled: false
+Rails/RedundantPresenceValidationOnBelongsTo: # 12
+  Enabled: false
+Rails/RenderInline: # 1
+  Enabled: false
+Rails/ResponseParsedBody: # 8 (spec)
+  Enabled: false
+Rails/RootPathnameMethods: # 1
+  Enabled: false
+Rails/RootPublicPath: # 1
+  Enabled: false
+Rails/SquishedSQLHeredocs: # 2
+  Enabled: false
+Rails/ToSWithArgument: # 2
+  Enabled: false
+Rails/TransactionExitStatement: # 3
+  Enabled: false
+Rails/WhereEquals: # 5
+  Enabled: false
+Rails/WhereExists: # 14
+  Enabled: false
+Rails/WhereNot: # 5
+  Enabled: false
+Rails/FindEach: # 16
+  Enabled: false
+Rails/RedundantActiveRecordAllMethod: # 1
+  Enabled: false

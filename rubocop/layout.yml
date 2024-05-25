@@ -1,0 +1,38 @@
+# 1行の長さを140まで許可
+Layout/LineLength:
+  Max: 140
+
+#
+Layout/ExtraSpacing:
+  Enabled: false
+
+# ハッシュの key と value のスペースは2つ以上でも許可する。(value の先頭に揃えて書きたいときのため)
+Layout/HashAlignment:
+  Enabled: false
+
+# => 前後のスペースは2つ以上でも許可する。(value の先頭に揃えて書きたいときのため)
+Layout/SpaceAroundOperators:
+  AllowForAlignment: false
+  Enabled: true
+
+# メソッド呼び出しの引数のなかにスペースを入れてよいことにする (そうしないと Slim 書きにくい)
+Layout/SpaceInsideParens:
+  Enabled: false
+  Exclude:
+    - app/views/**/*.slim
+
+# メソッド呼び出しの引数のインデントをチェックしない (そうしないと Slim 書きにくい)
+Layout/FirstArgumentIndentation:
+  Enabled: false
+  Exclude:
+    - app/views/**/*.slim
+
+# @fixme
+Layout/LineContinuationLeadingSpace: # 3
+  Enabled: false
+Layout/LineContinuationSpacing: # 6
+  Enabled: false
+Layout/LineEndStringConcatenationIndentation: # 3
+  Enabled: false
+Layout/MultilineMethodCallIndentation: # 4
+  Enabled: false

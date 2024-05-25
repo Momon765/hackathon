@@ -28,6 +28,7 @@ Things you may want to cover:
 ```bash
 docker compose up --build -d
 ```
+アプリには http://localhost:3000/ でアクセスできます。
 
 ### Dockerのコンテナ起動
 ```bash
@@ -49,17 +50,17 @@ docker compose up --build -d
  docker compose exec runner bash
 ```
 
-### データベースの作成
+## データベースの作成
 ```bash
  docker compose exec runner sh db/entrypoint.sh
 ```
 
-### rspecの実行
+## rspecの実行
 ```bash
  docker compose exec runner bundle exec rspec
 ```
 
-### rubocopの実行
+## rubocopの実行
 ```bash
  docker compose exec runner bundle exec rubocop
 ```

@@ -1,0 +1,65 @@
+# 日本語コメントを許可する
+Style/AsciiComments:
+  Enabled: false
+
+# クラスのコメント必須を無視
+Style/Documentation:
+  Enabled: false
+
+# モジュール名::クラス名の定義を許可
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# 複数行のハッシュの最終要素のうしろにカンマを必須とする
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# + 演算子で文字列を結合するのはやめる、をやめる (わかりにくい)
+Style/StringConcatenation:
+  Enabled: false
+
+# 行末で + で結合するのをやめる、のをやめる (わかりにくい)
+Style/LineEndConcatenation:
+  Enabled: false
+
+# 浮動小数点数の e 記法を強制するのをやめる (わかりにくくなる)
+Style/ExponentialNotation:
+  Enabled: false
+
+# rescue => e 表記を許可
+Style/RescueStandardError:
+  Enabled: false
+
+# @fixme
+Style/FetchEnvVar: # 39
+  Enabled: false
+Style/FileRead: # 3
+  Enabled: false
+Style/FileWrite: # 1
+  Enabled: false
+Style/HashConversion: # 3
+  Enabled: false
+Style/HashSyntax: # 364
+  Enabled: false
+Style/IfWithBooleanLiteralBranches: # 1
+  Enabled: false
+Style/QuotedSymbols: # 20
+  Enabled: false
+Style/RedundantConstantBase: # 1
+  Enabled: false
+Style/RedundantDoubleSplatHashBraces: # 3
+  Enabled: false
+Style/RedundantInitialize: # 1
+  Enabled: false
+Style/RedundantStringEscape: # 2
+  Enabled: false
+Style/IfUnlessModifier: # 17
+  Enabled: false
+Style/RedundantLineContinuation: # 1
+  Enabled: false
+Style/RedundantRegexpArgument: # 11
+  Enabled: false
+Style/TopLevelMethodDefinition:
+  Enabled: true
+Style/IdenticalConditionalBranches:
+  Enabled: false

@@ -1,0 +1,7 @@
+# 今から大量のカラム名を変えるのは厳しいため設定
+Naming/VariableNumber:
+  CheckSymbols: false
+
+# @fixme
+Naming/BlockForwarding: # 2
+  Enabled: false

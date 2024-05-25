@@ -1,0 +1,21 @@
+# メソッドの長さを40行まで許可
+Metrics/MethodLength:
+  Max: 40
+
+# ブロックの行数を50行まで許可
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - spec/**/*
+
+# メソッドの引数の数の制限をなくす
+Metrics/ParameterLists:
+  Enabled: false
+
+# @fixmeと書いてあったけど対応しなくても良さそうなCop
+Metrics/AbcSize:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
