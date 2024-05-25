@@ -9,8 +9,8 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { format } from "date-fns"
-import React from "react"
 import { RiCheckFill, RiFlagFill } from "react-icons/ri"
+import { randomEmoji } from "../../../utils/randomEmoji"
 
 type Props = {
   title: string
@@ -36,6 +36,19 @@ export const Card = (props: Props) => {
       objectFit="cover"
       src={props.imageUrl}
       alt={props.title}
+      fallback={
+        <Box
+          h={20}
+          aspectRatio={16 / 9}
+          rounded={"md"}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          backgroundColor={"background"}
+        >
+          <Text fontSize={"5xl"}>{randomEmoji()}</Text>
+        </Box>
+      }
     />
   ) : props.iconCharCode ? (
     <Box
@@ -65,7 +78,7 @@ export const Card = (props: Props) => {
       }}
       _hover={{
         cursor: "pointer",
-        opacity: 0.8,
+        opacity: 0.7,
       }}
       onClick={props.onClick}
     >
