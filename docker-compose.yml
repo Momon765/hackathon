@@ -95,6 +95,21 @@ services:
       timeout: 3s
       retries: 30
 
+  # docker sslのために、追加
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    links:
+      - runner
+    restart: always
+    environment:
+      DOMAINS: 'devsite.local -> http://runner:3000'
+      STAGE: 'local'
+    volumes:
+      - ./https-portal:/var/lib/https-portal
+
 volumes:
   postgres:
   redis:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_110930) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_133645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,12 +77,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_110930) do
     t.integer "sex", default: 0, null: false
     t.text "description"
     t.bigint "role_id"
-    t.bigint "employment_type_id", null: false
+    t.bigint "employment_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "uid", null: false
+    t.string "provider", null: false
+    t.string "profile_image_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employment_type_id"], name: "index_users_on_employment_type_id"
     t.index ["role_id"], name: "index_users_on_role_id"
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
   create_table "users_events", force: :cascade do |t|
