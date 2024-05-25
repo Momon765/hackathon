@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_035324) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_25_043341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,41 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_035324) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "event_employment_types", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "employment_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employment_type_id"], name: "index_event_employment_types_on_employment_type_id"
+    t.index ["event_id", "employment_type_id"], name: "idx_on_event_id_employment_type_id_1506cba35e", unique: true
+    t.index ["event_id"], name: "index_event_employment_types_on_event_id"
+  end
+
+  create_table "event_roles", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "role_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "role_id"], name: "index_event_roles_on_event_id_and_role_id", unique: true
+    t.index ["event_id"], name: "index_event_roles_on_event_id"
+    t.index ["role_id"], name: "index_event_roles_on_role_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.string "title", null: false
+    t.datetime "deadline"
+    t.string "description"
+    t.boolean "is_anonymous", default: false, null: false
+    t.integer "limit"
+    t.bigint "owner_id"
+    t.integer "communication_ch_id"
+    t.integer "scope_sex", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_events_on_owner_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -48,6 +83,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_035324) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  add_foreign_key "event_employment_types", "employment_types"
+  add_foreign_key "event_employment_types", "events"
+  add_foreign_key "event_roles", "events"
+  add_foreign_key "event_roles", "roles"
+  add_foreign_key "events", "users", column: "owner_id"
   add_foreign_key "roles", "departments"
   add_foreign_key "users", "employment_types"
   add_foreign_key "users", "roles"
