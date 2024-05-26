@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/me' => 'users#me'
+
   resources :users, only: [:show, :update]
   resources :employment_types, only: [:index]
   resources :departments, only: [:index]
