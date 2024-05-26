@@ -41,6 +41,18 @@ class ApplicationController < ActionController::Base
       users_attr_array << user_replaced_attributes(user)
     end
     event_attrs['users'] = users_attr_array
+
+    roles = event.roles
+    roles_attr_array = []
+    roles.each do |role|
+      roles_attr_array << role_replaced_attributes(role)
+    end
+    event_attrs['roles'] = roles_attr_array
+
+    employment_types = event.employment_types
+    employment_types_attr_array = employment_types.map(&:attributes)
+    event_attrs['employment_types'] = employment_types_attr_array
+
     event_attrs
   end
 end
