@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class EventsController < ApplicationController # rubocop:disable Metrics/ClassLength
-  protect_from_forgery :except => %i[create participants]
-  before_action :logged_in_user, only: %i[index create show update destroy participants]
-  before_action :authenticate_event, only: %i[update destroy]
+  # protect_from_forgery :except => %i[create participants]
+  # before_action :logged_in_user, only: %i[index create show update destroy participants]
 
   def index
     events = Event.order('deadline desc')
@@ -104,6 +103,17 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
   private
 
   def event_params
+    case params[:event][:scope_sex]
+    when '0'
+      params[:event][:scope_sex] = 'no_scope'
+    when '1'
+      params[:event][:scope_sex] = 'male'
+    when '2'
+      params[:event][:scope_sex] = 'female'
+    end
+
+    params[:event][:organizer_id] = User.first # current_user.id unless current_user.nil?
+
     params.require(:event).permit(
       :title,
       :is_anonymous,
