@@ -22,7 +22,7 @@ declare module "@tanstack/react-router" {
 const queryClient = new QueryClient()
 
 // Start the mock service worker
-worker.start()
+// worker.start()
 
 // Render the app
 const rootElement = document.getElementById("root")
