@@ -48,6 +48,18 @@ class User < ApplicationRecord
     self.password = Devise.friendly_token[0, 20]
   end
 
+  def replaced_attributes
+    user_attr = attributes
+
+    user_attr['employment_type'] = employment_type&.attributes
+    user_attr.delete('employment_type_id')
+
+    user_attr['role'] = role&.replaced_attributes
+    user_attr.delete('role_id')
+
+    user_attr
+  end
+
   private
 
   # 研修生は役職を持たない

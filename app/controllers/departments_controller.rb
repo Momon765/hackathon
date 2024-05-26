@@ -3,8 +3,7 @@
 class DepartmentsController < ApplicationController
   def index
     departments = Department.all
-    response_array = departments.map(&:attributes)
-    response = { 'roles' => response_array }
+    response = { 'departments' => departments.map(&:attributes) }
     render json: response, status: :ok
   end
 end

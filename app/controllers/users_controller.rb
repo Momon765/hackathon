@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       }
       render json: response, status: :bad_request
     else
-      response = { 'user' => user_replaced_attributes(user) }
+      response = { 'user' => user.replaced_attributes }
       render json: response, status: :ok
     end
   end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   def update
     user = User.find_by(id: params[:id])
     user.update!(user_params)
-    response = { 'users' => user_replaced_attributes(user) }
+    response = { 'users' => user.replaced_attributes }
     render json: response, status: :ok
   rescue => e
     Rails.logger.debug e
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       }
       render json: response, status: :unauthorized
     else
-      response = { 'user' => user_replaced_attributes(user) }
+      response = { 'user' => user.replaced_attributes }
       render json: response, status: :ok
     end
   rescue StandardError => e

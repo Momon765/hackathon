@@ -5,11 +5,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
 
   def index
     events = Event.order('deadline desc')
-    response_array = []
-    events.each do |event|
-      response_array << event_replaced_attributes(event)
-    end
-    response = { 'events' => response_array }
+    response = { 'events' => events.map(&:replaced_attributes) }
     render json: response, status: :ok
   end
 
@@ -17,7 +13,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
     attrs = event_params
     event = Event.new(attrs)
     event.save!
-    response = { 'events' => event_replaced_attributes(event) }
+    response = { 'events' => event.replaced_attributes }
     render json: response, status: :ok
   rescue => e
     Rails.logger.debug e
@@ -43,7 +39,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
       }
       render json: response, status: :bad_request
     else
-      response = { 'event' => event_replaced_attributes(event) }
+      response = { 'event' => event.replaced_attributes }
       render json: response, status: :ok
     end
   end
@@ -51,7 +47,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
   def update
     event = Event.find_by(id: params[:id])
     event.update!(event_params)
-    response = { 'events' => event_replaced_attributes(event) }
+    response = { 'event' => event.replaced_attributes }
     render json: response, status: :ok
   rescue => e
     Rails.logger.debug e
@@ -68,7 +64,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
   def destroy
     event = Event.find_by(id: params[:id])
     if !event.nil? && (destroyed_event = event.destroy)
-      response = { 'event' => event_replaced_attributes(destroyed_event) }
+      response = { 'event' => destroyed_event.replaced_attributes }
       render json: response, status: :ok
     else
       response = {
@@ -89,7 +85,7 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
     user = User.find_by(id: user_id)
     event.users << user
     event.save!
-    response = { 'event' => event_replaced_attributes(event) }
+    response = { 'event' => event.replaced_attributes }
     render json: response, status: :ok
   rescue => e
     Rails.logger.debug e
