@@ -9,6 +9,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
 import { Header, TABS } from "./-components/Header"
 import { Box, Container } from "@chakra-ui/react"
+import { useGetMe } from "../api"
 
 export const Route = createRootRoute({
   component: () => {
@@ -16,6 +17,15 @@ export const Route = createRootRoute({
     const navigate = useNavigate({
       from: location.pathname,
     })
+
+    // 認証
+    // const { data, error } = useGetMe()
+
+    // if (error) {
+    // if (location.pathname !== "/login") {
+    //   navigate({ to: "/login" })
+    //   return null
+    // }
 
     const handleClickTab = (index: number) => {
       navigate({
@@ -32,11 +42,13 @@ export const Route = createRootRoute({
     return (
       <Box minH="100vh" background={"background"}>
         <Header
-          isLoggedin={true}
+          isLoggedin={
+            location.pathname !== "/login" && location.pathname !== "/signup"
+          }
           onClickSettings={handleClickSettings}
           pathName={location.pathname}
           onClickTab={handleClickTab}
-          onClickNew={() => console.log("click new")}
+          onClickNew={() => navigate({ to: "/events/new" })}
         />
         <Container maxW="container.lg" pt={20} background={"background"}>
           <Outlet />

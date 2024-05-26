@@ -820,6 +820,8 @@ const emojis = [
 	"🔹",
 ];
 
-export const randomEmoji = () => {
+export const randomEmoji = (num?: number) => {
+	if (num) return emojis[num * 20];
+
 	return emojis[Math.floor(Math.random() * emojis.length)];
 };

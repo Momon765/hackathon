@@ -1,16 +1,7 @@
-import {
-  Avatar,
-  Badge,
-  Box,
-  Flex,
-  Image,
-  Spacer,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Avatar, Badge, Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react"
 import { format } from "date-fns"
 import { RiCheckFill, RiFlagFill } from "react-icons/ri"
-import { randomEmoji } from "../../../utils/randomEmoji"
+import { EventImage } from "../EventImage"
 
 type Props = {
   title: string
@@ -27,44 +18,6 @@ type Props = {
 export const Card = (props: Props) => {
   const startDate = new Date(props.startDate)
   const formattedStartDate = format(startDate, "yyyy/MM/dd HH:mm ~")
-
-  const ImageComponent = props.imageUrl ? (
-    <Image
-      h={20}
-      aspectRatio={16 / 9}
-      rounded={"md"}
-      objectFit="cover"
-      src={props.imageUrl}
-      alt={props.title}
-      fallback={
-        <Box
-          h={20}
-          aspectRatio={16 / 9}
-          rounded={"md"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          backgroundColor={"background"}
-        >
-          <Text fontSize={"5xl"}>{randomEmoji()}</Text>
-        </Box>
-      }
-    />
-  ) : props.iconCharCode ? (
-    <Box
-      h={20}
-      aspectRatio={16 / 9}
-      rounded={"md"}
-      display={"flex"}
-      alignItems={"center"}
-      justifyContent={"center"}
-      backgroundColor={"background"}
-    >
-      <Text fontSize={"5xl"}>{props.iconCharCode}</Text>
-    </Box>
-  ) : (
-    <Box h={20} aspectRatio={16 / 9} />
-  )
 
   return (
     <Box
@@ -88,7 +41,12 @@ export const Card = (props: Props) => {
             {props.title}
           </Text>
           <Spacer />
-          {ImageComponent}
+          <EventImage
+            imageUrl={props.imageUrl}
+            iconCharCode={props.iconCharCode}
+            title={props.title}
+            w={32}
+          />
         </Flex>
         <Flex alignItems={"center"}>
           <Flex alignItems={"center"} gap={4} color={"gray"}>
