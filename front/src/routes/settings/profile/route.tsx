@@ -60,11 +60,11 @@ const Index = () => {
     defaultValues: async () => {
       const data = await getMe()
       return {
-        description: data.data.user.description ?? "",
-        departmentId: data.data.user.role?.department.id ?? 0,
-        roleId: data.data.user.role?.id ?? 0,
-        employmentTypeId: data.data.user.employmentType?.id ?? 0,
-        sex: data.data.user.sex ?? 2,
+        description: data.user.description ?? "",
+        departmentId: data.user.role?.department.id ?? 0,
+        roleId: data.user.role?.id ?? 0,
+        employmentTypeId: data.user.employmentType?.id ?? 0,
+        sex: data.user.sex ?? 2,
       }
     },
   })
@@ -104,7 +104,7 @@ const Index = () => {
     (e) => console.error(e, watch())
   )
 
-  const roleOptions = rolesData?.data.roles.filter(
+  const roleOptions = rolesData?.roles.filter(
     (role) => role.department.id === watch("departmentId")
   )
 
@@ -136,13 +136,11 @@ const Index = () => {
               <Select
                 {...register("employmentTypeId", { valueAsNumber: true })}
               >
-                {employmentTypesData?.data.employmentTypes.map(
-                  (employmentType) => (
-                    <option key={employmentType.id} value={employmentType.id}>
-                      {employmentType.name}
-                    </option>
-                  )
-                )}
+                {employmentTypesData?.employmentTypes.map((employmentType) => (
+                  <option key={employmentType.id} value={employmentType.id}>
+                    {employmentType.name}
+                  </option>
+                ))}
               </Select>
               {errors.employmentTypeId && (
                 <FormErrorMessage>
@@ -153,7 +151,7 @@ const Index = () => {
             <FormControl isRequired isInvalid={Boolean(errors.departmentId)}>
               <FormLabel>部署</FormLabel>
               <Select {...register("departmentId", { valueAsNumber: true })}>
-                {departmentsData?.data.departments.map((department) => (
+                {departmentsData?.departments.map((department) => (
                   <option key={department.id} value={department.id}>
                     {department.name}
                   </option>

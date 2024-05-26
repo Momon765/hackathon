@@ -72,11 +72,12 @@ export const EventForm = (props: Props) => {
     defaultValues: {
       title: defaultValues?.title,
       isAnonymous: defaultValues?.is_anonymous,
-      startDate: format(
-        parseISO(defaultValues!.start_date!),
-        "yyyy-MM-dd'T'HH:mm"
-      ),
-      endDate: format(parseISO(defaultValues!.end_date!), "yyyy-MM-dd'T'HH:mm"),
+      startDate: defaultValues
+        ? format(parseISO(defaultValues.start_date!), "yyyy-MM-dd'T'HH:mm")
+        : undefined,
+      endDate: defaultValues
+        ? format(parseISO(defaultValues.end_date!), "yyyy-MM-dd'T'HH:mm")
+        : undefined,
       deadline: defaultValues?.deadline
         ? format(parseISO(defaultValues!.deadline!), "yyyy-MM-dd'T'HH:mm")
         : undefined,
@@ -155,12 +156,6 @@ export const EventForm = (props: Props) => {
               <Text fontWeight={"bold"}>開催日時</Text>
               <FormControl isRequired>
                 <FormLabel>開始</FormLabel>
-                <div>
-                  {format(
-                    parseISO(defaultValues!.start_date!),
-                    "yyyy-MM-ddThh:mm"
-                  )}
-                </div>
                 <Input type="datetime-local" {...register("startDate")} />
                 {errors.startDate && (
                   <FormErrorMessage>

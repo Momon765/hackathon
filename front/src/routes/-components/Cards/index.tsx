@@ -23,11 +23,15 @@ export const Cards = () => {
     return <div>Error: {error?.message}</div>
   }
 
-  if (data?.data.events.length === 0) {
+  if (!data) {
+    return <div>データがありません</div>
+  }
+
+  if (data?.events?.length === 0) {
     return <div>開催予定のイベントがありません</div>
   }
 
-  const events = data?.data.events
+  const events = data?.events
 
   return (
     <Grid

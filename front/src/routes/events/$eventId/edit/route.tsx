@@ -70,12 +70,12 @@ const Index = () => {
 
   return (
     <EventForm
-      roles={roles?.data.roles ?? []}
-      employmentTypes={employmentTypes?.data.employmentTypes ?? []}
+      roles={roles?.roles ?? []}
+      employmentTypes={employmentTypes?.employmentTypes ?? []}
       heading="イベント編集"
       submitButtonText="更新"
       onSubmit={handleSubmit}
-      defaultValues={event?.data.event}
+      defaultValues={event?.event}
       onClose={() => {
         navigate({ from: "/events/$eventId/edit", to: "/events" })
       }}

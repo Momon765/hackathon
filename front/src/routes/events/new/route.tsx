@@ -41,8 +41,8 @@ const Index = () => {
 
   return (
     <EventForm
-      roles={roles?.data.roles ?? []}
-      employmentTypes={employmentTypes?.data.employmentTypes ?? []}
+      roles={roles?.roles ?? []}
+      employmentTypes={employmentTypes?.employmentTypes ?? []}
       heading="イベント作成"
       submitButtonText="作成"
       onSubmit={handleSubmit}
