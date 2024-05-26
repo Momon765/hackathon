@@ -32,7 +32,6 @@ class User < ApplicationRecord
     def find_for_oauth(auth)
       @user = User.find_or_initialize_by(uid: auth.uid, provider: auth.provider)
       @user.assign_info(auth)
-      binding.pry
       @user.save!
       @user
     rescue StandardError => e

@@ -348,7 +348,6 @@ RSpec.describe 'Events', type: :request do # rubocop:disable RSpec/MultipleMemoi
     end
 
     it 'paramsが不正な場合、400 Bad Requestを返すこと' do
-      binding.pry
       sign_in user
       put participants_event_path(event.id), params: invalid_params
       expect(response).to have_http_status(:bad_request)

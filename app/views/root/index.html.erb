@@ -1,11 +1,11 @@
 <div class="container">
   <div class="header">
-    <div class="name">お気軽ランチ会</div>
+    <div class="name">🍙お気軽ランチ会</div>
   </div>
 
   <div class="content">
     <div class="col-md-12">
-      <h1 class="title">お気軽ランチ会</h1>
+      <h1 class="title">🥪誰かとランチ行きたいですよね?🍚</h1>
 
       <p><%= button_to "#{OmniAuth::Utils.camelize(:slack)}でサインイン", omniauth_authorize_path(:user, :slack),
                        data: { turbo: false }, class: "btn btn-primary btn-orange" %></p>
@@ -46,6 +46,7 @@
     gap: 20px;
     align-items: center;
     width: 60%;
+    padding: 20px;
     border-radius: 20px;
     background-color: white; /* Note: '#gray' is not a valid color, changed to 'gray' */
   }
@@ -54,7 +55,7 @@
     font-size: 24px;
     font-weight: bold;
     color: #333;
-    margin-au
+    margin: auto;
   }
 
   .btn-orange {
@@ -65,6 +66,7 @@
     border-radius: 10px;
     font-size: 24px;
     font-color: white;
+    margin: auto;
   }
 
 </style>
