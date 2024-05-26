@@ -57,6 +57,7 @@ export const Cards = () => {
               startDate={event.start_date}
               isOrganizer={isOrganizer}
               isParticipant={isParticipant}
+              isAnonymous={event.is_anonymous}
               onClick={() => navigate({ search: { id: event.id } })}
             />
             <EventDetailModal
