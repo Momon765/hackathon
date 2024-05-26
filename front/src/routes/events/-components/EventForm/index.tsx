@@ -32,13 +32,12 @@ import {
 import { SEX_ENUM } from "../../../../constants"
 
 type Props = {
-  departments: Department[]
   roles: Role[]
   employmentTypes: EmploymentType[]
   heading: string
-  defaultValues: Event
+  defaultValues?: Event
   submitButtonText: string
-  onSubmit: (values: PostEventMutationBody) => void
+  onSubmit: (values: PostEventMutationBody) => Promise<void>
   onClose: () => void
 }
 
@@ -57,8 +56,6 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export const EventForm = (props: Props) => {
-  const toast = useToast()
-
   const sexOptions = Object.entries(SEX_ENUM).map(([key, value]) => ({
     label: value,
     value: Number(key),
@@ -69,27 +66,27 @@ export const EventForm = (props: Props) => {
   const {
     register,
     handleSubmit,
-    formState: { isDirty, errors },
+    formState: { isDirty, errors, isSubmitting },
     setValue,
     watch,
   } = useForm<FormData>({
     defaultValues: {
-      title: defaultValues.title,
-      isAnonymous: defaultValues.is_anonymous,
-      startDate: defaultValues.start_date,
-      endDate: defaultValues.end_date,
-      deadline: defaultValues.deadline,
-      roleIds: defaultValues.roles?.map((role) => role.id) ?? [],
+      title: defaultValues?.title,
+      isAnonymous: defaultValues?.is_anonymous,
+      startDate: defaultValues?.start_date,
+      endDate: defaultValues?.end_date,
+      deadline: defaultValues?.deadline,
+      roleIds: defaultValues?.roles?.map((role) => role.id) ?? [],
       employmentTypeIds:
-        defaultValues.employment_types?.map(
+        defaultValues?.employment_types?.map(
           (employmentType) => employmentType.id
         ) ?? [],
-      scopeSex: defaultValues.scope_sex,
-      description: defaultValues.description,
+      scopeSex: defaultValues?.scope_sex,
+      description: defaultValues?.description,
     },
   })
 
-  const onSubmitHandler = handleSubmit((values) => {
+  const onSubmitHandler = handleSubmit(async (values) => {
     const event: PostEventMutationBody = {
       title: values.title,
       is_anonymous: values.isAnonymous,
@@ -101,8 +98,7 @@ export const EventForm = (props: Props) => {
       scope_sex: values.scopeSex,
       description: values.description,
     }
-    alert(JSON.stringify(event, null, 2))
-    onSubmit(event)
+    await onSubmit(event)
   }, console.error)
 
   const handleClose = () => {
@@ -129,7 +125,7 @@ export const EventForm = (props: Props) => {
           <ModalHeader>{props.heading}</ModalHeader>
           <ModalCloseButton />
           <Divider />
-          <ModalBody>
+          <ModalBody paddingBlock={4}>
             <Stack spacing={4}>
               <FormControl isRequired>
                 <Input
@@ -254,7 +250,11 @@ export const EventForm = (props: Props) => {
           </ModalBody>
           <Divider />
           <ModalFooter>
-            <Button type="submit" colorScheme="primary">
+            <Button
+              type="submit"
+              colorScheme="primary"
+              isLoading={isSubmitting}
+            >
               {props.submitButtonText}
             </Button>
           </ModalFooter>

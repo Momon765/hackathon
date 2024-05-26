@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login/route'
 import { Route as HistoryRouteImport } from './routes/history/route'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile/route'
+import { Route as EventsNewRouteImport } from './routes/events/new/route'
 
 // Create Virtual Routes
 
@@ -47,6 +48,11 @@ const IndexLazyRoute = IndexLazyImport.update({
 const SettingsProfileRouteRoute = SettingsProfileRouteImport.update({
   path: '/settings/profile',
   getParentRoute: () => rootRoute,
+} as any)
+
+const EventsNewRouteRoute = EventsNewRouteImport.update({
+  path: '/new',
+  getParentRoute: () => EventsRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -81,6 +87,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRoute
     }
+    '/events/new': {
+      id: '/events/new'
+      path: '/new'
+      fullPath: '/events/new'
+      preLoaderRoute: typeof EventsNewRouteImport
+      parentRoute: typeof EventsRouteImport
+    }
     '/settings/profile': {
       id: '/settings/profile'
       path: '/settings/profile'
@@ -95,7 +108,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  EventsRouteRoute,
+  EventsRouteRoute: EventsRouteRoute.addChildren({ EventsNewRouteRoute }),
   HistoryRouteRoute,
   LoginRouteRoute,
   SettingsProfileRouteRoute,
@@ -120,13 +133,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "index.lazy.tsx"
     },
     "/events": {
-      "filePath": "events/route.tsx"
+      "filePath": "events/route.tsx",
+      "children": [
+        "/events/new"
+      ]
     },
     "/history": {
       "filePath": "history/route.tsx"
     },
     "/login": {
       "filePath": "login/route.tsx"
+    },
+    "/events/new": {
+      "filePath": "events/new/route.tsx",
+      "parent": "/events"
     },
     "/settings/profile": {
       "filePath": "settings/profile/route.tsx"

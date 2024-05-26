@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { Outlet, createFileRoute } from "@tanstack/react-router"
 import { Heading } from "../-components/Heading"
 import { Cards } from "../-components/Cards"
 
@@ -7,6 +7,8 @@ export const Route = createFileRoute("/events")({
     <>
       <Heading text="開催予定イベント一覧" />
       <Cards />
+      {/* モーダル用 */}
+      <Outlet />
     </>
   ),
 })

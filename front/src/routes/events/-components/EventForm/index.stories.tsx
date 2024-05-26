@@ -75,7 +75,6 @@ export const Default: Story = {
     submitButtonText: "作成",
     employmentTypes: EMPLOYMENT_TYPES_MOCK,
     roles: ROLES_MOCK,
-    departments: DEPARTMENTS_MOCK,
     onClose: fn(),
     onSubmit: fn(),
   },

@@ -48,7 +48,7 @@ export const Route = createRootRoute({
           onClickSettings={handleClickSettings}
           pathName={location.pathname}
           onClickTab={handleClickTab}
-          onClickNew={() => console.log("click new")}
+          onClickNew={() => navigate({ to: "/events/new" })}
         />
         <Container maxW="container.lg" pt={20} background={"background"}>
           <Outlet />
