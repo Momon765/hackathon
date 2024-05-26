@@ -18,12 +18,9 @@ import type {
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query'
-import * as axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
+import {
+  useCallback
+} from 'react'
 import {
   faker
 } from '@faker-js/faker'
@@ -32,6 +29,8 @@ import {
   delay,
   http
 } from 'msw'
+import { customInstance } from './axiosInstance';
+import type { ErrorType, BodyType } from './axiosInstance';
 export type CallbackParams = {
 /**
  * コード
@@ -225,36 +224,41 @@ export interface LoginUrl {
 
 
 
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
 
 /**
  * 初回表示時にこのAPIを叩いてセッションが有効か確認する
  * @summary 自分の情報を取得
  */
 export const getMe = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetUserResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/me`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetUserResponse>(
+      {url: `https://devsite.local/me`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetMeQueryKey = () => {
     return [`https://devsite.local/me`] as const;
     }
 
     
-export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = AxiosError<AuthError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = ErrorType<AuthError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetMeQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) => getMe({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) => getMe(requestOptions, signal);
 
       
 
@@ -264,13 +268,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>
-export type GetMeQueryError = AxiosError<AuthError | ServerError>
+export type GetMeQueryError = ErrorType<AuthError | ServerError>
 
 /**
  * @summary 自分の情報を取得
  */
-export const useGetMe = <TData = Awaited<ReturnType<typeof getMe>>, TError = AxiosError<AuthError | ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetMe = <TData = Awaited<ReturnType<typeof getMe>>, TError = ErrorType<AuthError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -291,30 +295,33 @@ export const useGetMe = <TData = Awaited<ReturnType<typeof getMe>>, TError = Axi
  * @summary ログインURLを取得
  */
 export const getLoginUrl = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<LoginUrl>> => {
     
-    return axios.default.get(
-      `https://devsite.local/login`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<LoginUrl>(
+      {url: `https://devsite.local/login`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetLoginUrlQueryKey = () => {
     return [`https://devsite.local/login`] as const;
     }
 
     
-export const getGetLoginUrlQueryOptions = <TData = Awaited<ReturnType<typeof getLoginUrl>>, TError = AxiosError<ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLoginUrl>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetLoginUrlQueryOptions = <TData = Awaited<ReturnType<typeof getLoginUrl>>, TError = ErrorType<ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLoginUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetLoginUrlQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLoginUrl>>> = ({ signal }) => getLoginUrl({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLoginUrl>>> = ({ signal }) => getLoginUrl(requestOptions, signal);
 
       
 
@@ -324,13 +331,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetLoginUrlQueryResult = NonNullable<Awaited<ReturnType<typeof getLoginUrl>>>
-export type GetLoginUrlQueryError = AxiosError<ServerError>
+export type GetLoginUrlQueryError = ErrorType<ServerError>
 
 /**
  * @summary ログインURLを取得
  */
-export const useGetLoginUrl = <TData = Awaited<ReturnType<typeof getLoginUrl>>, TError = AxiosError<ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLoginUrl>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetLoginUrl = <TData = Awaited<ReturnType<typeof getLoginUrl>>, TError = ErrorType<ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLoginUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -351,32 +358,34 @@ export const useGetLoginUrl = <TData = Awaited<ReturnType<typeof getLoginUrl>>, 
  * @summary OAuth2のコールバック
  */
 export const callback = (
-    params: CallbackParams, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<unknown>> => {
-    
-    return axios.default.get(
-      `https://devsite.local/callback`,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
+    params: CallbackParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<unknown>(
+      {url: `https://devsite.local/callback`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
 
 export const getCallbackQueryKey = (params: CallbackParams,) => {
     return [`https://devsite.local/callback`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getCallbackQueryOptions = <TData = Awaited<ReturnType<typeof callback>>, TError = AxiosError<void | ServerError>>(params: CallbackParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof callback>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getCallbackQueryOptions = <TData = Awaited<ReturnType<typeof callback>>, TError = ErrorType<void | ServerError>>(params: CallbackParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof callback>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getCallbackQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof callback>>> = ({ signal }) => callback(params, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof callback>>> = ({ signal }) => callback(params, requestOptions, signal);
 
       
 
@@ -386,13 +395,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type CallbackQueryResult = NonNullable<Awaited<ReturnType<typeof callback>>>
-export type CallbackQueryError = AxiosError<void | ServerError>
+export type CallbackQueryError = ErrorType<void | ServerError>
 
 /**
  * @summary OAuth2のコールバック
  */
-export const useCallback = <TData = Awaited<ReturnType<typeof callback>>, TError = AxiosError<void | ServerError>>(
- params: CallbackParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof callback>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useCallback = <TData = Awaited<ReturnType<typeof callback>>, TError = ErrorType<void | ServerError>>(
+ params: CallbackParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof callback>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -413,30 +422,33 @@ export const useCallback = <TData = Awaited<ReturnType<typeof callback>>, TError
  * @summary イベントの一覧を取得
  */
 export const getEvents = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEventsResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/events`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetEventsResponse>(
+      {url: `https://devsite.local/events`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetEventsQueryKey = () => {
     return [`https://devsite.local/events`] as const;
     }
 
     
-export const getGetEventsQueryOptions = <TData = Awaited<ReturnType<typeof getEvents>>, TError = AxiosError<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetEventsQueryOptions = <TData = Awaited<ReturnType<typeof getEvents>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetEventsQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvents>>> = ({ signal }) => getEvents({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvents>>> = ({ signal }) => getEvents(requestOptions, signal);
 
       
 
@@ -446,13 +458,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetEventsQueryResult = NonNullable<Awaited<ReturnType<typeof getEvents>>>
-export type GetEventsQueryError = AxiosError<unknown>
+export type GetEventsQueryError = ErrorType<unknown>
 
 /**
  * @summary イベントの一覧を取得
  */
-export const useGetEvents = <TData = Awaited<ReturnType<typeof getEvents>>, TError = AxiosError<unknown>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetEvents = <TData = Awaited<ReturnType<typeof getEvents>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvents>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -473,29 +485,32 @@ export const useGetEvents = <TData = Awaited<ReturnType<typeof getEvents>>, TErr
  * @summary イベントを作成
  */
 export const postEvent = (
-    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEventResponse>> => {
-    
-    return axios.default.post(
-      `https://devsite.local/events`,
-      postEventRequest,options
-    );
-  }
+    postEventRequest: BodyType<PostEventRequest>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GetEventResponse>(
+      {url: `https://devsite.local/events`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postEventRequest
+    },
+      options);
+    }
+  
 
 
-
-export const getPostEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPostEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: BodyType<PostEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: BodyType<PostEventRequest>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEvent>>, {data: PostEventRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEvent>>, {data: BodyType<PostEventRequest>}> = (props) => {
           const {data} = props ?? {};
 
-          return  postEvent(data,axiosOptions)
+          return  postEvent(data,requestOptions)
         }
 
         
@@ -504,18 +519,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PostEventMutationResult = NonNullable<Awaited<ReturnType<typeof postEvent>>>
-    export type PostEventMutationBody = PostEventRequest
-    export type PostEventMutationError = AxiosError<ClientError | ServerError>
+    export type PostEventMutationBody = BodyType<PostEventRequest>
+    export type PostEventMutationError = ErrorType<ClientError | ServerError>
 
     /**
  * @summary イベントを作成
  */
-export const usePostEvent = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+export const usePostEvent = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEvent>>, TError,{data: BodyType<PostEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof postEvent>>,
         TError,
-        {data: PostEventRequest},
+        {data: BodyType<PostEventRequest>},
         TContext
       > => {
 
@@ -529,30 +544,33 @@ export const usePostEvent = <TError = AxiosError<ClientError | ServerError>,
  * @summary イベントの詳細を取得
  */
 export const getEvent = (
-    eventId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEventResponse>> => {
-    
-    return axios.default.get(
-      `https://devsite.local/events/${eventId}`,options
-    );
-  }
-
+    eventId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetEventResponse>(
+      {url: `https://devsite.local/events/${eventId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetEventQueryKey = (eventId: string,) => {
     return [`https://devsite.local/events/${eventId}`] as const;
     }
 
     
-export const getGetEventQueryOptions = <TData = Awaited<ReturnType<typeof getEvent>>, TError = AxiosError<ClientError | ServerError>>(eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetEventQueryOptions = <TData = Awaited<ReturnType<typeof getEvent>>, TError = ErrorType<ClientError | ServerError>>(eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetEventQueryKey(eventId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvent>>> = ({ signal }) => getEvent(eventId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvent>>> = ({ signal }) => getEvent(eventId, requestOptions, signal);
 
       
 
@@ -562,13 +580,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetEventQueryResult = NonNullable<Awaited<ReturnType<typeof getEvent>>>
-export type GetEventQueryError = AxiosError<ClientError | ServerError>
+export type GetEventQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary イベントの詳細を取得
  */
-export const useGetEvent = <TData = Awaited<ReturnType<typeof getEvent>>, TError = AxiosError<ClientError | ServerError>>(
- eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetEvent = <TData = Awaited<ReturnType<typeof getEvent>>, TError = ErrorType<ClientError | ServerError>>(
+ eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvent>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -590,29 +608,32 @@ export const useGetEvent = <TData = Awaited<ReturnType<typeof getEvent>>, TError
  */
 export const putEvent = (
     eventId: string,
-    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEventResponse>> => {
-    
-    return axios.default.put(
-      `https://devsite.local/events/${eventId}`,
-      postEventRequest,options
-    );
-  }
+    postEventRequest: BodyType<PostEventRequest>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GetEventResponse>(
+      {url: `https://devsite.local/events/${eventId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: postEventRequest
+    },
+      options);
+    }
+  
 
 
-
-export const getPutEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPutEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: BodyType<PostEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: BodyType<PostEventRequest>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putEvent>>, {eventId: string;data: PostEventRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putEvent>>, {eventId: string;data: BodyType<PostEventRequest>}> = (props) => {
           const {eventId,data} = props ?? {};
 
-          return  putEvent(eventId,data,axiosOptions)
+          return  putEvent(eventId,data,requestOptions)
         }
 
         
@@ -621,18 +642,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PutEventMutationResult = NonNullable<Awaited<ReturnType<typeof putEvent>>>
-    export type PutEventMutationBody = PostEventRequest
-    export type PutEventMutationError = AxiosError<ClientError | ServerError>
+    export type PutEventMutationBody = BodyType<PostEventRequest>
+    export type PutEventMutationError = ErrorType<ClientError | ServerError>
 
     /**
  * @summary イベントを更新
  */
-export const usePutEvent = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: PostEventRequest}, TContext>, axios?: AxiosRequestConfig}
+export const usePutEvent = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putEvent>>, TError,{eventId: string;data: BodyType<PostEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof putEvent>>,
         TError,
-        {eventId: string;data: PostEventRequest},
+        {eventId: string;data: BodyType<PostEventRequest>},
         TContext
       > => {
 
@@ -646,20 +667,22 @@ export const usePutEvent = <TError = AxiosError<ClientError | ServerError>,
  * @summary イベントを削除
  */
 export const deleteEvent = (
-    eventId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEventResponse>> => {
-    
-    return axios.default.delete(
-      `https://devsite.local/events/${eventId}`,options
-    );
-  }
+    eventId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GetEventResponse>(
+      {url: `https://devsite.local/events/${eventId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
 
 
-
-export const getDeleteEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, axios?: AxiosRequestConfig}
+export const getDeleteEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
@@ -667,7 +690,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEvent>>, {eventId: string}> = (props) => {
           const {eventId} = props ?? {};
 
-          return  deleteEvent(eventId,axiosOptions)
+          return  deleteEvent(eventId,requestOptions)
         }
 
         
@@ -677,13 +700,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
 
     export type DeleteEventMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEvent>>>
     
-    export type DeleteEventMutationError = AxiosError<ClientError | ServerError>
+    export type DeleteEventMutationError = ErrorType<ClientError | ServerError>
 
     /**
  * @summary イベントを削除
  */
-export const useDeleteEvent = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, axios?: AxiosRequestConfig}
+export const useDeleteEvent = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEvent>>, TError,{eventId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof deleteEvent>>,
         TError,
@@ -702,29 +725,32 @@ export const useDeleteEvent = <TError = AxiosError<ClientError | ServerError>,
  */
 export const joinEvent = (
     eventId: number,
-    joinEventRequest: JoinEventRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<JoinEventResponse>> => {
-    
-    return axios.default.post(
-      `https://devsite.local/events/${eventId}/participants`,
-      joinEventRequest,options
-    );
-  }
+    joinEventRequest: BodyType<JoinEventRequest>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<JoinEventResponse>(
+      {url: `https://devsite.local/events/${eventId}/participants`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: joinEventRequest
+    },
+      options);
+    }
+  
 
 
-
-export const getJoinEventMutationOptions = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getJoinEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: BodyType<JoinEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: BodyType<JoinEventRequest>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof joinEvent>>, {eventId: number;data: JoinEventRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof joinEvent>>, {eventId: number;data: BodyType<JoinEventRequest>}> = (props) => {
           const {eventId,data} = props ?? {};
 
-          return  joinEvent(eventId,data,axiosOptions)
+          return  joinEvent(eventId,data,requestOptions)
         }
 
         
@@ -733,18 +759,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type JoinEventMutationResult = NonNullable<Awaited<ReturnType<typeof joinEvent>>>
-    export type JoinEventMutationBody = JoinEventRequest
-    export type JoinEventMutationError = AxiosError<ClientError | ServerError>
+    export type JoinEventMutationBody = BodyType<JoinEventRequest>
+    export type JoinEventMutationError = ErrorType<ClientError | ServerError>
 
     /**
  * @summary イベントに参加申し込みをする
  */
-export const useJoinEvent = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: JoinEventRequest}, TContext>, axios?: AxiosRequestConfig}
+export const useJoinEvent = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof joinEvent>>, TError,{eventId: number;data: BodyType<JoinEventRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof joinEvent>>,
         TError,
-        {eventId: number;data: JoinEventRequest},
+        {eventId: number;data: BodyType<JoinEventRequest>},
         TContext
       > => {
 
@@ -758,30 +784,33 @@ export const useJoinEvent = <TError = AxiosError<ClientError | ServerError>,
  * @summary ユーザーの詳細を取得
  */
 export const getUser = (
-    userId: string, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetUserResponse>> => {
-    
-    return axios.default.get(
-      `https://devsite.local/users/${userId}`,options
-    );
-  }
-
+    userId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetUserResponse>(
+      {url: `https://devsite.local/users/${userId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetUserQueryKey = (userId: string,) => {
     return [`https://devsite.local/users/${userId}`] as const;
     }
 
     
-export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = AxiosError<ClientError | ServerError>>(userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = ErrorType<ClientError | ServerError>>(userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetUserQueryKey(userId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser(userId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser(userId, requestOptions, signal);
 
       
 
@@ -791,13 +820,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetUserQueryResult = NonNullable<Awaited<ReturnType<typeof getUser>>>
-export type GetUserQueryError = AxiosError<ClientError | ServerError>
+export type GetUserQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary ユーザーの詳細を取得
  */
-export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError = AxiosError<ClientError | ServerError>>(
- userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError = ErrorType<ClientError | ServerError>>(
+ userId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -819,29 +848,32 @@ export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError =
  */
 export const putUser = (
     userId: string,
-    putUserRequest: PutUserRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetUserResponse>> => {
-    
-    return axios.default.put(
-      `https://devsite.local/users/${userId}`,
-      putUserRequest,options
-    );
-  }
+    putUserRequest: BodyType<PutUserRequest>,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GetUserResponse>(
+      {url: `https://devsite.local/users/${userId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: putUserRequest
+    },
+      options);
+    }
+  
 
 
-
-export const getPutUserMutationOptions = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext> => {
-const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
+export const getPutUserMutationOptions = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: BodyType<PutUserRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: BodyType<PutUserRequest>}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putUser>>, {userId: string;data: PutUserRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putUser>>, {userId: string;data: BodyType<PutUserRequest>}> = (props) => {
           const {userId,data} = props ?? {};
 
-          return  putUser(userId,data,axiosOptions)
+          return  putUser(userId,data,requestOptions)
         }
 
         
@@ -850,18 +882,18 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?? {};
   return  { mutationFn, ...mutationOptions }}
 
     export type PutUserMutationResult = NonNullable<Awaited<ReturnType<typeof putUser>>>
-    export type PutUserMutationBody = PutUserRequest
-    export type PutUserMutationError = AxiosError<ClientError | ServerError>
+    export type PutUserMutationBody = BodyType<PutUserRequest>
+    export type PutUserMutationError = ErrorType<ClientError | ServerError>
 
     /**
  * @summary ユーザーを更新
  */
-export const usePutUser = <TError = AxiosError<ClientError | ServerError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: PutUserRequest}, TContext>, axios?: AxiosRequestConfig}
+export const usePutUser = <TError = ErrorType<ClientError | ServerError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putUser>>, TError,{userId: string;data: BodyType<PutUserRequest>}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof putUser>>,
         TError,
-        {userId: string;data: PutUserRequest},
+        {userId: string;data: BodyType<PutUserRequest>},
         TContext
       > => {
 
@@ -875,30 +907,33 @@ export const usePutUser = <TError = AxiosError<ClientError | ServerError>,
  * @summary レストランの一覧を取得
  */
 export const getRestaurants = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetRestaurantsResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/restaurants`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetRestaurantsResponse>(
+      {url: `https://devsite.local/restaurants`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetRestaurantsQueryKey = () => {
     return [`https://devsite.local/restaurants`] as const;
     }
 
     
-export const getGetRestaurantsQueryOptions = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetRestaurantsQueryOptions = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = ErrorType<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetRestaurantsQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRestaurants>>> = ({ signal }) => getRestaurants({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRestaurants>>> = ({ signal }) => getRestaurants(requestOptions, signal);
 
       
 
@@ -908,13 +943,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetRestaurantsQueryResult = NonNullable<Awaited<ReturnType<typeof getRestaurants>>>
-export type GetRestaurantsQueryError = AxiosError<ClientError | ServerError>
+export type GetRestaurantsQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary レストランの一覧を取得
  */
-export const useGetRestaurants = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = AxiosError<ClientError | ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetRestaurants = <TData = Awaited<ReturnType<typeof getRestaurants>>, TError = ErrorType<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRestaurants>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -935,30 +970,33 @@ export const useGetRestaurants = <TData = Awaited<ReturnType<typeof getRestauran
  * @summary 部署の一覧を取得
  */
 export const getDepartments = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetDepartmentsResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/departments`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetDepartmentsResponse>(
+      {url: `https://devsite.local/departments`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetDepartmentsQueryKey = () => {
     return [`https://devsite.local/departments`] as const;
     }
 
     
-export const getGetDepartmentsQueryOptions = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetDepartmentsQueryOptions = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = ErrorType<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetDepartmentsQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDepartments>>> = ({ signal }) => getDepartments({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDepartments>>> = ({ signal }) => getDepartments(requestOptions, signal);
 
       
 
@@ -968,13 +1006,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetDepartmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getDepartments>>>
-export type GetDepartmentsQueryError = AxiosError<ClientError | ServerError>
+export type GetDepartmentsQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary 部署の一覧を取得
  */
-export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = AxiosError<ClientError | ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartments>>, TError = ErrorType<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDepartments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -995,30 +1033,33 @@ export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartmen
  * @summary 役職の一覧を取得
  */
 export const getRoles = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetRolesResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/roles`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetRolesResponse>(
+      {url: `https://devsite.local/roles`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetRolesQueryKey = () => {
     return [`https://devsite.local/roles`] as const;
     }
 
     
-export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = ErrorType<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetRolesQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles(requestOptions, signal);
 
       
 
@@ -1028,13 +1069,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getRoles>>>
-export type GetRolesQueryError = AxiosError<ClientError | ServerError>
+export type GetRolesQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary 役職の一覧を取得
  */
-export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError = ErrorType<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
@@ -1055,30 +1096,33 @@ export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError
  * @summary 雇用形態の一覧を取得
  */
 export const getEmploymentTypes = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<GetEmploymentTypesResponse>> => {
     
-    return axios.default.get(
-      `https://devsite.local/employment_types`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetEmploymentTypesResponse>(
+      {url: `https://devsite.local/employment_types`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 export const getGetEmploymentTypesQueryKey = () => {
     return [`https://devsite.local/employment_types`] as const;
     }
 
     
-export const getGetEmploymentTypesQueryOptions = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetEmploymentTypesQueryOptions = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = ErrorType<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetEmploymentTypesQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEmploymentTypes>>> = ({ signal }) => getEmploymentTypes({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEmploymentTypes>>> = ({ signal }) => getEmploymentTypes(requestOptions, signal);
 
       
 
@@ -1088,13 +1132,13 @@ const {query: queryOptions, axios: axiosOptions} = options ?? {};
 }
 
 export type GetEmploymentTypesQueryResult = NonNullable<Awaited<ReturnType<typeof getEmploymentTypes>>>
-export type GetEmploymentTypesQueryError = AxiosError<ClientError | ServerError>
+export type GetEmploymentTypesQueryError = ErrorType<ClientError | ServerError>
 
 /**
  * @summary 雇用形態の一覧を取得
  */
-export const useGetEmploymentTypes = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = AxiosError<ClientError | ServerError>>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const useGetEmploymentTypes = <TData = Awaited<ReturnType<typeof getEmploymentTypes>>, TError = ErrorType<ClientError | ServerError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmploymentTypes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 

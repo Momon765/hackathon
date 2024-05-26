@@ -11,6 +11,12 @@ export default defineConfig({
 			// baseUrl: "http://localhost:3000",
 			baseUrl: "https://devsite.local",
 			mock: true,
+			override: {
+				mutator: {
+					path: './src/axiosInstance.ts',
+					name: 'customInstance',
+				}
+			}
 		},
 	},
 });
