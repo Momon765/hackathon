@@ -8,7 +8,10 @@ export default defineConfig({
 		output: {
 			client: "react-query",
 			target: "./src/api.ts",
+<<<<<<< Updated upstream
 			// baseUrl: "http://localhost:3000",
+=======
+>>>>>>> Stashed changes
 			baseUrl: "https://devsite.local",
 			mock: true,
 			override: {

@@ -14,6 +14,6 @@ class RootController < ApplicationController
   end
 
   def frontend_url
-    return ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
+    ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
   end
 end

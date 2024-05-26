@@ -233,6 +233,7 @@ type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
  */
 export const getMe = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -243,6 +244,13 @@ export const getMe = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/me`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetMeQueryKey = () => {
     return [`https://devsite.local/me`] as const;
@@ -296,6 +304,7 @@ export const useGetMe = <TData = Awaited<ReturnType<typeof getMe>>, TError = Err
  */
 export const getLoginUrl = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -306,6 +315,13 @@ export const getLoginUrl = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/login`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetLoginUrlQueryKey = () => {
     return [`https://devsite.local/login`] as const;
@@ -358,6 +374,7 @@ export const useGetLoginUrl = <TData = Awaited<ReturnType<typeof getLoginUrl>>, 
  * @summary OAuth2のコールバック
  */
 export const callback = (
+<<<<<<< Updated upstream
     params: CallbackParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -370,6 +387,18 @@ export const callback = (
       options);
     }
   
+=======
+    params: CallbackParams, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<unknown>> => {
+    
+    return axios.default.get(
+      `https://devsite.local/callback`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getCallbackQueryKey = (params: CallbackParams,) => {
     return [`https://devsite.local/callback`, ...(params ? [params]: [])] as const;
@@ -423,6 +452,7 @@ export const useCallback = <TData = Awaited<ReturnType<typeof callback>>, TError
  */
 export const getEvents = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -433,6 +463,13 @@ export const getEvents = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/events`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetEventsQueryKey = () => {
     return [`https://devsite.local/events`] as const;
@@ -485,6 +522,7 @@ export const useGetEvents = <TData = Awaited<ReturnType<typeof getEvents>>, TErr
  * @summary イベントを作成
  */
 export const postEvent = (
+<<<<<<< Updated upstream
     postEventRequest: BodyType<PostEventRequest>,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -497,6 +535,16 @@ export const postEvent = (
       options);
     }
   
+=======
+    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.post(
+      `https://devsite.local/events`,
+      postEventRequest,options
+    );
+  }
+>>>>>>> Stashed changes
 
 
 export const getPostEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
@@ -544,6 +592,7 @@ export const usePostEvent = <TError = ErrorType<ClientError | ServerError>,
  * @summary イベントの詳細を取得
  */
 export const getEvent = (
+<<<<<<< Updated upstream
     eventId: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -555,6 +604,16 @@ export const getEvent = (
       options);
     }
   
+=======
+    eventId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.get(
+      `https://devsite.local/events/${eventId}`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetEventQueryKey = (eventId: string,) => {
     return [`https://devsite.local/events/${eventId}`] as const;
@@ -608,6 +667,7 @@ export const useGetEvent = <TData = Awaited<ReturnType<typeof getEvent>>, TError
  */
 export const putEvent = (
     eventId: string,
+<<<<<<< Updated upstream
     postEventRequest: BodyType<PostEventRequest>,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -620,6 +680,16 @@ export const putEvent = (
       options);
     }
   
+=======
+    postEventRequest: PostEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.put(
+      `https://devsite.local/events/${eventId}`,
+      postEventRequest,options
+    );
+  }
+>>>>>>> Stashed changes
 
 
 export const getPutEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
@@ -667,6 +737,7 @@ export const usePutEvent = <TError = ErrorType<ClientError | ServerError>,
  * @summary イベントを削除
  */
 export const deleteEvent = (
+<<<<<<< Updated upstream
     eventId: string,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -677,6 +748,15 @@ export const deleteEvent = (
       options);
     }
   
+=======
+    eventId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetEventResponse>> => {
+    
+    return axios.default.delete(
+      `https://devsite.local/events/${eventId}`,options
+    );
+  }
+>>>>>>> Stashed changes
 
 
 export const getDeleteEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
@@ -725,6 +805,7 @@ export const useDeleteEvent = <TError = ErrorType<ClientError | ServerError>,
  */
 export const joinEvent = (
     eventId: number,
+<<<<<<< Updated upstream
     joinEventRequest: BodyType<JoinEventRequest>,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -737,6 +818,16 @@ export const joinEvent = (
       options);
     }
   
+=======
+    joinEventRequest: JoinEventRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<JoinEventResponse>> => {
+    
+    return axios.default.post(
+      `https://devsite.local/events/${eventId}/participants`,
+      joinEventRequest,options
+    );
+  }
+>>>>>>> Stashed changes
 
 
 export const getJoinEventMutationOptions = <TError = ErrorType<ClientError | ServerError>,
@@ -784,6 +875,7 @@ export const useJoinEvent = <TError = ErrorType<ClientError | ServerError>,
  * @summary ユーザーの詳細を取得
  */
 export const getUser = (
+<<<<<<< Updated upstream
     userId: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -795,6 +887,16 @@ export const getUser = (
       options);
     }
   
+=======
+    userId: string, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetUserResponse>> => {
+    
+    return axios.default.get(
+      `https://devsite.local/users/${userId}`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetUserQueryKey = (userId: string,) => {
     return [`https://devsite.local/users/${userId}`] as const;
@@ -848,6 +950,7 @@ export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError =
  */
 export const putUser = (
     userId: string,
+<<<<<<< Updated upstream
     putUserRequest: BodyType<PutUserRequest>,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -860,6 +963,16 @@ export const putUser = (
       options);
     }
   
+=======
+    putUserRequest: PutUserRequest, options?: AxiosRequestConfig
+ ): Promise<AxiosResponse<GetUserResponse>> => {
+    
+    return axios.default.put(
+      `https://devsite.local/users/${userId}`,
+      putUserRequest,options
+    );
+  }
+>>>>>>> Stashed changes
 
 
 export const getPutUserMutationOptions = <TError = ErrorType<ClientError | ServerError>,
@@ -908,6 +1021,7 @@ export const usePutUser = <TError = ErrorType<ClientError | ServerError>,
  */
 export const getRestaurants = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -918,6 +1032,13 @@ export const getRestaurants = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/restaurants`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetRestaurantsQueryKey = () => {
     return [`https://devsite.local/restaurants`] as const;
@@ -971,6 +1092,7 @@ export const useGetRestaurants = <TData = Awaited<ReturnType<typeof getRestauran
  */
 export const getDepartments = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -981,6 +1103,13 @@ export const getDepartments = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/departments`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetDepartmentsQueryKey = () => {
     return [`https://devsite.local/departments`] as const;
@@ -1034,6 +1163,7 @@ export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartmen
  */
 export const getRoles = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -1044,6 +1174,13 @@ export const getRoles = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/roles`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetRolesQueryKey = () => {
     return [`https://devsite.local/roles`] as const;
@@ -1097,6 +1234,7 @@ export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError
  */
 export const getEmploymentTypes = (
     
+<<<<<<< Updated upstream
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -1107,6 +1245,13 @@ export const getEmploymentTypes = (
       options);
     }
   
+=======
+    return axios.default.get(
+      `https://devsite.local/employment_types`,options
+    );
+  }
+
+>>>>>>> Stashed changes
 
 export const getGetEmploymentTypesQueryKey = () => {
     return [`https://devsite.local/employment_types`] as const;
