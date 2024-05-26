@@ -37,6 +37,27 @@ class UsersController < ApplicationController
     render json: response, status: :bad_request
   end
 
+  def me
+    user = current_user
+    if user.nil?
+      response = {
+        'status' => 401,
+        'message' => 'Unauthorized',
+      }
+      render json: response, status: :unauthorized
+    else
+      response = { 'user' => user_replaced_attributes(user) }
+      render json: response, status: :ok
+    end
+  rescue StandardError => e
+    e.message
+    response = {
+      'status' => 500,
+      'message' => 'Internal Server Error',
+    }
+    render json: response, status: :internal_server_error
+  end
+
   private
 
   def user_params
