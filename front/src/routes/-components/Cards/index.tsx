@@ -23,11 +23,15 @@ export const Cards = () => {
     return <div>Error: {error?.message}</div>
   }
 
-  if (data?.data.events.length === 0) {
+  if (!data) {
+    return <div>データがありません</div>
+  }
+
+  if (data?.events?.length === 0) {
     return <div>開催予定のイベントがありません</div>
   }
 
-  const events = data?.data.events
+  const events = data?.events
 
   return (
     <Grid
@@ -38,9 +42,11 @@ export const Cards = () => {
       gap={2}
     >
       {events?.map((event) => {
-        if (event.id === undefined) return null
+        const eventId = event.id
+        if (!eventId) return null
 
-        const isOrganizer = event.organizer.id === 1
+        // const isOrganizer = event.organizer.id === 1
+        const isOrganizer = true
         const isParticipant =
           event.users?.some((participant) => participant.id === 1) ?? false
         const isSelected = searchParams.id === event.id
@@ -55,6 +61,7 @@ export const Cards = () => {
               startDate={event.start_date}
               isOrganizer={isOrganizer}
               isParticipant={isParticipant}
+              isAnonymous={event.is_anonymous}
               onClick={() => navigate({ search: { id: event.id } })}
             />
             <EventDetailModal
@@ -64,7 +71,13 @@ export const Cards = () => {
                 isOrganizer ? "owner" : isParticipant ? "participant" : "other"
               }
               onParticipate={() => {}}
-              onEdit={() => {}}
+              onEdit={() =>
+                navigate({
+                  to: "/events/$eventId/edit",
+                  params: { eventId: String(eventId) },
+                  search: {},
+                })
+              }
               onClose={() => navigate({ search: {} })}
             />
           </React.Fragment>

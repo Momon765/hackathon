@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import type {
-  Department,
   EmploymentType,
   Role,
   Event,
@@ -27,9 +26,9 @@ import {
   Textarea,
   Select,
   Box,
-  useToast,
 } from "@chakra-ui/react"
 import { SEX_ENUM } from "../../../../constants"
+import { format, parseISO } from "date-fns"
 
 type Props = {
   roles: Role[]
@@ -73,9 +72,15 @@ export const EventForm = (props: Props) => {
     defaultValues: {
       title: defaultValues?.title,
       isAnonymous: defaultValues?.is_anonymous,
-      startDate: defaultValues?.start_date,
-      endDate: defaultValues?.end_date,
-      deadline: defaultValues?.deadline,
+      startDate: defaultValues
+        ? format(parseISO(defaultValues.start_date!), "yyyy-MM-dd'T'HH:mm")
+        : undefined,
+      endDate: defaultValues
+        ? format(parseISO(defaultValues.end_date!), "yyyy-MM-dd'T'HH:mm")
+        : undefined,
+      deadline: defaultValues?.deadline
+        ? format(parseISO(defaultValues!.deadline!), "yyyy-MM-dd'T'HH:mm")
+        : undefined,
       roleIds: defaultValues?.roles?.map((role) => role.id) ?? [],
       employmentTypeIds:
         defaultValues?.employment_types?.map(

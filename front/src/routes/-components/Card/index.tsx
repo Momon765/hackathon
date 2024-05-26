@@ -12,6 +12,7 @@ type Props = {
   startDate: string
   isOrganizer: boolean
   isParticipant: boolean
+  isAnonymous?: boolean
   onClick: () => void
 }
 
@@ -59,6 +60,17 @@ export const Card = (props: Props) => {
           </Flex>
           <Spacer />
           <Flex gap={2}>
+            {props.isAnonymous && (
+              <Badge
+                colorScheme="primary"
+                variant="subtle"
+                display={"flex"}
+                alignItems={"center"}
+                gap={1}
+              >
+                匿名
+              </Badge>
+            )}
             {props.isOrganizer && (
               <Badge
                 colorScheme="green"
@@ -73,7 +85,7 @@ export const Card = (props: Props) => {
             )}
             {props.isParticipant && (
               <Badge
-                colorScheme="primary"
+                colorScheme="secondary"
                 variant="subtle"
                 display={"flex"}
                 alignItems={"center"}
