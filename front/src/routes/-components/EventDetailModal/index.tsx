@@ -27,7 +27,7 @@ type Props = {
   mode: Mode
   isOpen: boolean
   onEdit: () => void
-  onParticipate: () => void
+  onParticipate: () => Promise<void>
   onClose: () => void
 }
 

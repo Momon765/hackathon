@@ -1,5 +1,5 @@
-import { Grid } from "@chakra-ui/react"
-import { useGetEvents } from "../../../api"
+import { Grid, useToast } from "@chakra-ui/react"
+import { useGetEvents, useJoinEvent } from "../../../api"
 import { EventDetailModal } from "../EventDetailModal"
 import { Card } from "../Card"
 import { useNavigate, useSearch } from "@tanstack/react-router"
@@ -14,6 +14,36 @@ export const Cards = () => {
   const navigate = useNavigate()
 
   const { data, isLoading, error, isError } = useGetEvents()
+  const toast = useToast()
+
+  const { mutateAsync: joinEvent } = useJoinEvent()
+  const handleJoinEvent = async () => {
+    if (!searchParams.id) return
+
+    try {
+      await joinEvent({
+        eventId: searchParams.id,
+        data: {
+          user_id: 1,
+        },
+      })
+      toast({
+        title: "イベントに参加しました",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+      navigate({ search: {} })
+    } catch (error) {
+      toast({
+        title: "エラーが発生しました",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+      console.error(error)
+    }
+  }
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -46,7 +76,7 @@ export const Cards = () => {
         if (!eventId) return null
 
         // const isOrganizer = event.organizer.id === 1
-        const isOrganizer = true
+        const isOrganizer = false
         const isParticipant =
           event.users?.some((participant) => participant.id === 1) ?? false
         const isSelected = searchParams.id === event.id
@@ -70,7 +100,7 @@ export const Cards = () => {
               mode={
                 isOrganizer ? "owner" : isParticipant ? "participant" : "other"
               }
-              onParticipate={() => {}}
+              onParticipate={handleJoinEvent}
               onEdit={() =>
                 navigate({
                   to: "/events/$eventId/edit",
