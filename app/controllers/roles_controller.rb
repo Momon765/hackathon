@@ -2,7 +2,7 @@
 
 class RolesController < ApplicationController
   def index
-    roles = Role.where(department_id: params[:department_id])
+    roles = Role.all
     response_array = []
     roles.each do |role|
       response_array << role_replaced_attributes(role)

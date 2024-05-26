@@ -24,7 +24,6 @@ Rails.application.routes.draw do
 
   resources :users, only: [:show, :update]
   resources :employment_types, only: [:index]
-  resources :departments, only: [:index] do
-    resources :roles, only: [:index]
-  end
+  resources :departments, only: [:index]
+  resources :roles, only: [:index]
 end
