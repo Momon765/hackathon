@@ -4,6 +4,9 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
   # protect_from_forgery :except => %i[create participants]
   # before_action :logged_in_user, only: %i[index create show update destroy participants]
 
+
+
+
   def index
     events = Event.order('deadline desc')
     response = { 'events' => events.map(&:replaced_attributes) }
@@ -12,6 +15,8 @@ class EventsController < ApplicationController # rubocop:disable Metrics/ClassLe
 
   def create
     attrs = event_params
+    # TODO:delete
+    event_params[:organizer_id] = User.first.id
     event = Event.new(attrs)
     event.save!
     response = { 'events' => event.replaced_attributes }

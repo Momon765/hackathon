@@ -3,6 +3,9 @@
 class UsersController < ApplicationController
   # protect_from_forgery :except => %i[update]
   # before_action :logged_in_user, only: %i[show update me]
+  # bef
+  # ore_action :logged_in_user, only: %i[show update me]
+
 
   def show
     user = User.find_by(id: params[:id])
