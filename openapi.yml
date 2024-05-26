@@ -761,20 +761,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerError'
-  /departments/{department_id}/roles:
+  /roles:
     get:
-      summary: 部署の役職の一覧を取得
-      description: 部署の役職の一覧を取得
+      summary: 役職の一覧を取得
+      description: 役職の一覧を取得
       operationId: getRoles
       tags:
         - roles
-      parameters:
-        - name: department_id
-          in: path
-          required: true
-          description: 部署ID
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
