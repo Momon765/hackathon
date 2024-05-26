@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login/route'
 import { Route as HistoryRouteImport } from './routes/history/route'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as SettingsProfileRouteImport } from './routes/settings/profile/route'
@@ -22,6 +23,11 @@ import { Route as SettingsProfileRouteImport } from './routes/settings/profile/r
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const LoginRouteRoute = LoginRouteImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const HistoryRouteRoute = HistoryRouteImport.update({
   path: '/history',
@@ -68,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/settings/profile': {
       id: '/settings/profile'
       path: '/settings/profile'
@@ -84,6 +97,7 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   EventsRouteRoute,
   HistoryRouteRoute,
+  LoginRouteRoute,
   SettingsProfileRouteRoute,
 })
 
@@ -98,6 +112,7 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/events",
         "/history",
+        "/login",
         "/settings/profile"
       ]
     },
@@ -109,6 +124,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/history": {
       "filePath": "history/route.tsx"
+    },
+    "/login": {
+      "filePath": "login/route.tsx"
     },
     "/settings/profile": {
       "filePath": "settings/profile/route.tsx"

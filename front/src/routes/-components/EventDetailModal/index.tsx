@@ -13,10 +13,12 @@ import {
   Flex,
   Avatar,
   Badge,
+  Box,
 } from "@chakra-ui/react"
 import type { Event } from "../../../api"
 import type { ReactNode } from "react"
 import { SEX_ENUM } from "../../../constants"
+import { EventImage } from "../EventImage"
 
 type Mode = "owner" | "participant" | "other"
 
@@ -106,7 +108,15 @@ export const EventDetailModal = ({
         <ModalCloseButton />
         <Divider />
         <ModalBody>
-          <Stack spacing={4}>
+          <Stack spacing={4} paddingBlock={4}>
+            <Box p={4}>
+              <EventImage
+                imageUrl={event.image_url}
+                title={event.title}
+                w="100%"
+              />
+            </Box>
+            <Divider />
             <EventDetailModalItem
               label="締め切り"
               values={[formattedDeadline]}
