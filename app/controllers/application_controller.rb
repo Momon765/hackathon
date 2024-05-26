@@ -1,27 +1,23 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  def replaced_attributes(attributes, model, model_name = nil)
-    name = model_name.nil? ? model.class.name.underscore : model_name
-    model_attr = model.attributes
-    attributes.delete(name + '_id')
-    attributes[name] = model_attr
-    attributes
-  end
-
   def role_replaced_attributes(role)
-    role_attr = role.attributes
-    department = role.department
+    role_attr = role&.attributes
+    department = role&.department
+    role_attr['department'] = department&.attributes unless role_attr.nil?
+    role_attr&.delete('department_id')
 
-    replaced_attributes(role_attr, department)
+    role_attr
   end
 
   def user_replaced_attributes(user)
     user_attr = user.attributes
-    role = user.role
-    employment_type = user.employment_type
 
-    user_attr = replaced_attributes(user_attr, employment_type)
+    employment_type = user.employment_type
+    user_attr['employment_type'] = employment_type&.attributes
+    user_attr.delete('employment_type_id')
+
+    role = user.role
     user_attr['role'] = role_replaced_attributes(role)
     user_attr.delete('role_id')
 
@@ -31,7 +27,7 @@ class ApplicationController < ActionController::Base
   def event_replaced_attributes(event)
     event_attrs = event.attributes
     organizer = User.find_by(id: event_attrs['organizer_id'])
-    organizer_attr = user_replaced_attributes(organizer)
+    organizer_attr = user_replaced_attributes(organizer) unless organizer.nil?
     event_attrs.delete('organizer_id')
     event_attrs['organizer'] = organizer_attr
 
