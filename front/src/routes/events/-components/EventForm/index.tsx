@@ -1,6 +1,12 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import type { Event, PostEventMutationBody } from "../../../../api"
+import type {
+  Department,
+  EmploymentType,
+  Role,
+  Event,
+  PostEventMutationBody,
+} from "../../../../api"
 import {
   Button,
   Checkbox,
@@ -19,9 +25,16 @@ import {
   Stack,
   Text,
   Textarea,
+  Select,
+  Box,
+  useToast,
 } from "@chakra-ui/react"
+import { SEX_ENUM } from "../../../../constants"
 
 type Props = {
+  departments: Department[]
+  roles: Role[]
+  employmentTypes: EmploymentType[]
   heading: string
   defaultValues: Event
   submitButtonText: string
@@ -35,7 +48,6 @@ const schema = z.object({
   startDate: z.string(),
   endDate: z.string(),
   deadline: z.string(),
-  departmentId: z.number(),
   roleIds: z.array(z.number()),
   employmentTypeIds: z.array(z.number()),
   scopeSex: z.number(),
@@ -45,13 +57,36 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export const EventForm = (props: Props) => {
+  const toast = useToast()
+
+  const sexOptions = Object.entries(SEX_ENUM).map(([key, value]) => ({
+    label: value,
+    value: Number(key),
+  }))
+
   const { defaultValues, onSubmit } = props
+
   const {
     register,
     handleSubmit,
     formState: { isDirty, errors },
+    setValue,
+    watch,
   } = useForm<FormData>({
-    defaultValues,
+    defaultValues: {
+      title: defaultValues.title,
+      isAnonymous: defaultValues.is_anonymous,
+      startDate: defaultValues.start_date,
+      endDate: defaultValues.end_date,
+      deadline: defaultValues.deadline,
+      roleIds: defaultValues.roles?.map((role) => role.id) ?? [],
+      employmentTypeIds:
+        defaultValues.employment_types?.map(
+          (employmentType) => employmentType.id
+        ) ?? [],
+      scopeSex: defaultValues.scope_sex,
+      description: defaultValues.description,
+    },
   })
 
   const onSubmitHandler = handleSubmit((values) => {
@@ -66,8 +101,9 @@ export const EventForm = (props: Props) => {
       scope_sex: values.scopeSex,
       description: values.description,
     }
+    alert(JSON.stringify(event, null, 2))
     onSubmit(event)
-  })
+  }, console.error)
 
   const handleClose = () => {
     if (isDirty) {
@@ -82,15 +118,18 @@ export const EventForm = (props: Props) => {
     props.onClose()
   }
 
+  const currentRoleIds = watch("roleIds")
+  const currentEmploymentTypeIds = watch("employmentTypeIds")
+
   return (
     <Modal isOpen={true} onClose={handleClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{props.heading}</ModalHeader>
-        <ModalCloseButton />
-        <Divider />
-        <ModalBody>
-          <form onSubmit={onSubmitHandler}>
+        <Box as={"form"} display={"contents"} onSubmit={onSubmitHandler}>
+          <ModalHeader>{props.heading}</ModalHeader>
+          <ModalCloseButton />
+          <Divider />
+          <ModalBody>
             <Stack spacing={4}>
               <FormControl isRequired>
                 <Input
@@ -148,13 +187,78 @@ export const EventForm = (props: Props) => {
                 )}
               </FormControl>
               <Divider />
+              <Text fontWeight={"bold"}>募集条件</Text>
+              <FormControl>
+                <FormLabel>性別</FormLabel>
+                <Select {...register("scopeSex")}>
+                  {sexOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>雇用形態</FormLabel>
+                {
+                  <Stack>
+                    {props.employmentTypes.map((employmentType) => (
+                      <Checkbox
+                        key={employmentType.id}
+                        value={employmentType.id}
+                        isChecked={currentEmploymentTypeIds.includes(
+                          employmentType.id
+                        )}
+                        onChange={() => {
+                          setValue(
+                            "employmentTypeIds",
+                            currentEmploymentTypeIds.includes(employmentType.id)
+                              ? currentEmploymentTypeIds.filter(
+                                  (id) => id !== employmentType.id
+                                )
+                              : [...currentEmploymentTypeIds, employmentType.id]
+                          )
+                        }}
+                      >
+                        {employmentType.name}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                }
+              </FormControl>
+              <FormControl>
+                <FormLabel>部署/役職</FormLabel>
+                {
+                  <Stack>
+                    {props.roles.map((role) => (
+                      <Checkbox
+                        key={role.id}
+                        value={role.id}
+                        isChecked={currentRoleIds.includes(role.id)}
+                        onChange={() =>
+                          setValue(
+                            "roleIds",
+                            currentRoleIds.includes(role.id)
+                              ? currentRoleIds.filter((id) => id !== role.id)
+                              : [...currentRoleIds, role.id]
+                          )
+                        }
+                      >
+                        {role.department.name} / {role.name}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                }
+              </FormControl>
             </Stack>
-          </form>
-        </ModalBody>
-        <Divider />
-        <ModalFooter>
-          <Button colorScheme="primary">{props.submitButtonText}</Button>
-        </ModalFooter>
+          </ModalBody>
+          <Divider />
+          <ModalFooter>
+            <Button type="submit" colorScheme="primary">
+              {props.submitButtonText}
+            </Button>
+          </ModalFooter>
+        </Box>
       </ModalContent>
     </Modal>
   )
