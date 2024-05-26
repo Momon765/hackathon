@@ -3,8 +3,7 @@
 class EmploymentTypesController < ApplicationController
   def index
     employment_types = EmploymentType.all
-    response_array = employment_types.map(&:attributes)
-    response = { 'events' => response_array }
+    response = { 'employment_types' => employment_types.map(&:attributes) }
     render json: response, status: :ok
   end
 end

@@ -62,4 +62,19 @@ class Event < ApplicationRecord
 
     errors.add(:organizer_id, '開催期間が重なるイベントが存在します') unless events.empty?
   end
+
+  def replaced_attributes
+    event_attrs = attributes
+    organizer_attr = organizer&.replaced_attributes
+    event_attrs.delete('organizer_id')
+    event_attrs['organizer'] = organizer_attr
+
+    event_attrs['users'] = users.map(&:replaced_attributes)
+
+    event_attrs['roles'] = roles.map(&:replaced_attributes)
+
+    event_attrs['employment_types'] = employment_types.map(&:attributes)
+
+    event_attrs
+  end
 end
