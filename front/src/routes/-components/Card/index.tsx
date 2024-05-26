@@ -46,7 +46,7 @@ export const Card = (props: Props) => {
           justifyContent={"center"}
           backgroundColor={"background"}
         >
-          <Text fontSize={"5xl"}>{randomEmoji()}</Text>
+          <Text fontSize={"5xl"}>{randomEmoji(props.title.length)}</Text>
         </Box>
       }
     />

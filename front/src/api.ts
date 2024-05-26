@@ -149,17 +149,6 @@ export interface EmploymentType {
   name: string;
 }
 
-export interface Department {
-  id: number;
-  name: string;
-}
-
-export interface Role {
-  department: Department;
-  id: number;
-  name: string;
-}
-
 export interface User {
   created_at?: string;
   /** 自己紹介 */
@@ -176,11 +165,35 @@ export interface User {
   updated_at?: string;
 }
 
+export interface Department {
+  id: number;
+  name: string;
+}
+
+export interface Role {
+  department: Department;
+  id: number;
+  name: string;
+}
+
 export interface Restaurant {
   /** ホットペッパーAPIのID */
   api_stored_id: string;
   id: number;
 }
+
+/**
+ * 0: 男性, 1: 女性, 2: その他
+ */
+export type EventScopeSex = typeof EventScopeSex[keyof typeof EventScopeSex];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const EventScopeSex = {
+  NUMBER_0: 0,
+  NUMBER_1: 1,
+  NUMBER_2: 2,
+} as const;
 
 export interface Event {
   /** SlackのチャンネルID */
@@ -188,6 +201,7 @@ export interface Event {
   created_at?: string;
   deadline?: string;
   description?: string;
+  employment_types?: EmploymentType[];
   end_date: string;
   id?: number;
   image_url: string;
@@ -195,6 +209,9 @@ export interface Event {
   limit: number;
   organizer: User;
   restaurant?: Restaurant;
+  roles?: Role[];
+  /** 0: 男性, 1: 女性, 2: その他 */
+  scope_sex?: EventScopeSex;
   start_date: string;
   title: string;
   updated_at?: string;
@@ -218,13 +235,13 @@ export const getMe = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/me`,options
+      `http://localhost:3000/me`,options
     );
   }
 
 
 export const getGetMeQueryKey = () => {
-    return [`http://localhost:8000/me`] as const;
+    return [`http://localhost:3000/me`] as const;
     }
 
     
@@ -278,13 +295,13 @@ export const getLoginUrl = (
  ): Promise<AxiosResponse<LoginUrl>> => {
     
     return axios.default.get(
-      `http://localhost:8000/login`,options
+      `http://localhost:3000/login`,options
     );
   }
 
 
 export const getGetLoginUrlQueryKey = () => {
-    return [`http://localhost:8000/login`] as const;
+    return [`http://localhost:3000/login`] as const;
     }
 
     
@@ -338,7 +355,7 @@ export const callback = (
  ): Promise<AxiosResponse<unknown>> => {
     
     return axios.default.get(
-      `http://localhost:8000/callback`,{
+      `http://localhost:3000/callback`,{
     ...options,
         params: {...params, ...options?.params},}
     );
@@ -346,7 +363,7 @@ export const callback = (
 
 
 export const getCallbackQueryKey = (params: CallbackParams,) => {
-    return [`http://localhost:8000/callback`, ...(params ? [params]: [])] as const;
+    return [`http://localhost:3000/callback`, ...(params ? [params]: [])] as const;
     }
 
     
@@ -400,13 +417,13 @@ export const getEvents = (
  ): Promise<AxiosResponse<GetEventsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/events`,options
+      `http://localhost:3000/events`,options
     );
   }
 
 
 export const getGetEventsQueryKey = () => {
-    return [`http://localhost:8000/events`] as const;
+    return [`http://localhost:3000/events`] as const;
     }
 
     
@@ -460,7 +477,7 @@ export const postEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.post(
-      `http://localhost:8000/events`,
+      `http://localhost:3000/events`,
       postEventRequest,options
     );
   }
@@ -516,13 +533,13 @@ export const getEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/events/${eventId}`,options
+      `http://localhost:3000/events/${eventId}`,options
     );
   }
 
 
 export const getGetEventQueryKey = (eventId: string,) => {
-    return [`http://localhost:8000/events/${eventId}`] as const;
+    return [`http://localhost:3000/events/${eventId}`] as const;
     }
 
     
@@ -577,7 +594,7 @@ export const putEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.put(
-      `http://localhost:8000/events/${eventId}`,
+      `http://localhost:3000/events/${eventId}`,
       postEventRequest,options
     );
   }
@@ -633,7 +650,7 @@ export const deleteEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.delete(
-      `http://localhost:8000/events/${eventId}`,options
+      `http://localhost:3000/events/${eventId}`,options
     );
   }
 
@@ -689,7 +706,7 @@ export const joinEvent = (
  ): Promise<AxiosResponse<JoinEventResponse>> => {
     
     return axios.default.post(
-      `http://localhost:8000/events/${eventId}/participants`,
+      `http://localhost:3000/events/${eventId}/participants`,
       joinEventRequest,options
     );
   }
@@ -745,13 +762,13 @@ export const getUser = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/users/${userId}`,options
+      `http://localhost:3000/users/${userId}`,options
     );
   }
 
 
 export const getGetUserQueryKey = (userId: string,) => {
-    return [`http://localhost:8000/users/${userId}`] as const;
+    return [`http://localhost:3000/users/${userId}`] as const;
     }
 
     
@@ -806,7 +823,7 @@ export const putUser = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.put(
-      `http://localhost:8000/users/${userId}`,
+      `http://localhost:3000/users/${userId}`,
       putUserRequest,options
     );
   }
@@ -862,13 +879,13 @@ export const getRestaurants = (
  ): Promise<AxiosResponse<GetRestaurantsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/restaurants`,options
+      `http://localhost:3000/restaurants`,options
     );
   }
 
 
 export const getGetRestaurantsQueryKey = () => {
-    return [`http://localhost:8000/restaurants`] as const;
+    return [`http://localhost:3000/restaurants`] as const;
     }
 
     
@@ -922,13 +939,13 @@ export const getDepartments = (
  ): Promise<AxiosResponse<GetDepartmentsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/departments`,options
+      `http://localhost:3000/departments`,options
     );
   }
 
 
 export const getGetDepartmentsQueryKey = () => {
-    return [`http://localhost:8000/departments`] as const;
+    return [`http://localhost:3000/departments`] as const;
     }
 
     
@@ -982,13 +999,13 @@ export const getRoles = (
  ): Promise<AxiosResponse<GetRolesResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/roles`,options
+      `http://localhost:3000/roles`,options
     );
   }
 
 
 export const getGetRolesQueryKey = () => {
-    return [`http://localhost:8000/roles`] as const;
+    return [`http://localhost:3000/roles`] as const;
     }
 
     
@@ -1042,13 +1059,13 @@ export const getEmploymentTypes = (
  ): Promise<AxiosResponse<GetEmploymentTypesResponse>> => {
     
     return axios.default.get(
-      `http://localhost:8000/employment_types`,options
+      `http://localhost:3000/employment_types`,options
     );
   }
 
 
 export const getGetEmploymentTypesQueryKey = () => {
-    return [`http://localhost:8000/employment_types`] as const;
+    return [`http://localhost:3000/employment_types`] as const;
     }
 
     
@@ -1099,17 +1116,17 @@ export const getGetMeResponseMock = (overrideResponse: Partial< GetUserResponse 
 
 export const getGetLoginUrlResponseMock = (overrideResponse: Partial< LoginUrl > = {}): LoginUrl => ({url: faker.word.sample(), ...overrideResponse})
 
-export const getGetEventsResponseMock = (overrideResponse: Partial< GetEventsResponse > = {}): GetEventsResponse => ({events: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])})), ...overrideResponse})
+export const getGetEventsResponseMock = (overrideResponse: Partial< GetEventsResponse > = {}): GetEventsResponse => ({events: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])})), ...overrideResponse})
 
-export const getPostEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+export const getPostEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
 
-export const getGetEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+export const getGetEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
 
-export const getPutEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+export const getPutEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
 
-export const getDeleteEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
+export const getDeleteEventResponseMock = (overrideResponse: Partial< GetEventResponse > = {}): GetEventResponse => ({event: {communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, ...overrideResponse})
 
-export const getJoinEventResponseMock = (overrideResponse: Partial< JoinEventResponse > = {}): JoinEventResponse => ({event: faker.helpers.arrayElement([{communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, undefined]), ...overrideResponse})
+export const getJoinEventResponseMock = (overrideResponse: Partial< JoinEventResponse > = {}): JoinEventResponse => ({event: faker.helpers.arrayElement([{communication_ch_id: faker.helpers.arrayElement([faker.word.sample(), undefined]), created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), deadline: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), employment_types: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), end_date: `${faker.date.past().toISOString().split('.')[0]}Z`, id: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), image_url: faker.word.sample(), is_anonymous: faker.datatype.boolean(), limit: faker.number.int({min: undefined, max: undefined}), organizer: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, restaurant: faker.helpers.arrayElement([{api_stored_id: faker.word.sample(), id: faker.number.int({min: undefined, max: undefined})}, undefined]), roles: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()})), undefined]), scope_sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), start_date: `${faker.date.past().toISOString().split('.')[0]}Z`, title: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), users: faker.helpers.arrayElement([Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])})), undefined])}, undefined]), ...overrideResponse})
 
 export const getGetUserResponseMock = (overrideResponse: Partial< GetUserResponse > = {}): GetUserResponse => ({user: {created_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined]), description: faker.helpers.arrayElement([faker.word.sample(), undefined]), email: faker.word.sample(), employmentType: faker.helpers.arrayElement([{id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), id: faker.number.int({min: undefined, max: undefined}), image_url: faker.helpers.arrayElement([faker.word.sample(), undefined]), name: faker.word.sample(), role: faker.helpers.arrayElement([{department: {id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, id: faker.number.int({min: undefined, max: undefined}), name: faker.word.sample()}, undefined]), sex: faker.helpers.arrayElement([faker.number.int({min: undefined, max: undefined}), undefined]), slack_id: faker.word.sample(), updated_at: faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, undefined])}, ...overrideResponse})
 

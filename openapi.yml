@@ -78,6 +78,14 @@ components:
           type: string
           example: "C12345678"
           description: "SlackのチャンネルID"
+        scope_sex:
+          type: integer
+          example: 0
+          enum:
+            - 0
+            - 1
+            - 2
+          description: "0: 男性, 1: 女性, 2: その他"
         created_at:
           type: string
           format: date-time
@@ -90,6 +98,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        employment_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmploymentType'
       required:
         - title
         - start_date
