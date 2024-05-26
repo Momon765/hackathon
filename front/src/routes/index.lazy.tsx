@@ -1,10 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { Heading } from "./-components/Heading"
-import {
-  getGetEventMockHandler,
-  getGetEventsResponseMock,
-  useGetEvents,
-} from "../api"
+import { useGetEvents } from "../api"
 import { Card } from "./-components/Card"
 import { Grid } from "@chakra-ui/react"
 

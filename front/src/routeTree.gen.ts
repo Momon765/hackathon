@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as HistoryRouteImport } from './routes/history/route'
 import { Route as EventsRouteImport } from './routes/events/route'
+import { Route as SettingsProfileRouteImport } from './routes/settings/profile/route'
 
 // Create Virtual Routes
 
@@ -36,6 +37,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const SettingsProfileRouteRoute = SettingsProfileRouteImport.update({
+  path: '/settings/profile',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -62,6 +68,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRoute
     }
+    '/settings/profile': {
+      id: '/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof SettingsProfileRouteImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -71,6 +84,7 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   EventsRouteRoute,
   HistoryRouteRoute,
+  SettingsProfileRouteRoute,
 })
 
 /* prettier-ignore-end */
@@ -83,7 +97,8 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
-        "/history"
+        "/history",
+        "/settings/profile"
       ]
     },
     "/": {
@@ -94,6 +109,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/history": {
       "filePath": "history/route.tsx"
+    },
+    "/settings/profile": {
+      "filePath": "settings/profile/route.tsx"
     }
   }
 }

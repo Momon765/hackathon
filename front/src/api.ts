@@ -974,54 +974,54 @@ export const useGetDepartments = <TData = Awaited<ReturnType<typeof getDepartmen
 
 
 /**
- * 部署の役職の一覧を取得
- * @summary 部署の役職の一覧を取得
+ * 役職の一覧を取得
+ * @summary 役職の一覧を取得
  */
 export const getRoles = (
-    departmentId: string, options?: AxiosRequestConfig
+     options?: AxiosRequestConfig
  ): Promise<AxiosResponse<GetRolesResponse>> => {
     
     return axios.default.get(
-      `http://localhost:5173/departments/${departmentId}/roles`,options
+      `http://localhost:5173/roles`,options
     );
   }
 
 
-export const getGetRolesQueryKey = (departmentId: string,) => {
-    return [`http://localhost:5173/departments/${departmentId}/roles`] as const;
+export const getGetRolesQueryKey = () => {
+    return [`http://localhost:5173/roles`] as const;
     }
 
     
-export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>(departmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
 
 const {query: queryOptions, axios: axiosOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetRolesQueryKey(departmentId);
+  const queryKey =  queryOptions?.queryKey ?? getGetRolesQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles(departmentId, { signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles({ signal, ...axiosOptions });
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(departmentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData> & { queryKey: QueryKey }
 }
 
 export type GetRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getRoles>>>
 export type GetRolesQueryError = AxiosError<ClientError | ServerError>
 
 /**
- * @summary 部署の役職の一覧を取得
+ * @summary 役職の一覧を取得
  */
 export const useGetRoles = <TData = Awaited<ReturnType<typeof getRoles>>, TError = AxiosError<ClientError | ServerError>>(
- departmentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, axios?: AxiosRequestConfig}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getGetRolesQueryOptions(departmentId,options)
+  const queryOptions = getGetRolesQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -1331,7 +1331,7 @@ export const getGetDepartmentsMockHandler = (overrideResponse?: GetDepartmentsRe
 }
 
 export const getGetRolesMockHandler = (overrideResponse?: GetRolesResponse | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => GetRolesResponse)) => {
-  return http.get('*/departments/:departmentId/roles', async (info) => {
+  return http.get('*/roles', async (info) => {
     await delay(1000);
     return new HttpResponse(JSON.stringify(overrideResponse !== undefined 
             ? (typeof overrideResponse === "function" ? overrideResponse(info) : overrideResponse) 

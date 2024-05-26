@@ -23,9 +23,17 @@ export const Route = createRootRoute({
       })
     }
 
+    const handleClickSettings = () => {
+      navigate({
+        to: "/settings/profile",
+      })
+    }
+
     return (
       <Box minH="100vh" background={"background"}>
         <Header
+          isLoggedin={true}
+          onClickSettings={handleClickSettings}
           pathName={location.pathname}
           onClickTab={handleClickTab}
           onClickNew={() => console.log("click new")}
