@@ -38,9 +38,11 @@ export const Cards = () => {
       gap={2}
     >
       {events?.map((event) => {
-        if (event.id === undefined) return null
+        const eventId = event.id
+        if (!eventId) return null
 
-        const isOrganizer = event.organizer.id === 1
+        // const isOrganizer = event.organizer.id === 1
+        const isOrganizer = true
         const isParticipant =
           event.users?.some((participant) => participant.id === 1) ?? false
         const isSelected = searchParams.id === event.id
@@ -64,7 +66,13 @@ export const Cards = () => {
                 isOrganizer ? "owner" : isParticipant ? "participant" : "other"
               }
               onParticipate={() => {}}
-              onEdit={() => {}}
+              onEdit={() =>
+                navigate({
+                  to: "/events/$eventId/edit",
+                  params: { eventId: String(eventId) },
+                  search: {},
+                })
+              }
               onClose={() => navigate({ search: {} })}
             />
           </React.Fragment>

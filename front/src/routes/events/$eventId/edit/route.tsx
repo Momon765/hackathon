@@ -39,20 +39,33 @@ const Index = () => {
     return <Spinner />
   }
 
+  if (eventError) {
+    return <div>Error: {eventError.message}</div>
+  }
+
   const handleSubmit: ComponentProps<typeof EventForm>["onSubmit"] = async (
     values
   ) => {
-    await putEvent({
-      eventId: eventId,
-      data: values,
-    })
-    toast({
-      title: "イベントを更新しました",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    })
-    navigate({ from: "/events/new", to: "/events" })
+    try {
+      await putEvent({
+        eventId: eventId,
+        data: values,
+      })
+      toast({
+        title: "イベントを更新しました",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      })
+      navigate({ from: "/events/new", to: "/events" })
+    } catch (error) {
+      toast({
+        title: "イベントの更新に失敗しました",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
