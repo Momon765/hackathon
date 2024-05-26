@@ -3,6 +3,7 @@ import { useGetEvents } from "../../../api"
 import { EventDetailModal } from "../EventDetailModal"
 import { Card } from "../Card"
 import { useNavigate, useSearch } from "@tanstack/react-router"
+import React from "react"
 
 export const Cards = () => {
   const searchParams: {
@@ -45,7 +46,7 @@ export const Cards = () => {
         const isSelected = searchParams.id === event.id
 
         return (
-          <>
+          <React.Fragment key={event.id}>
             <Card
               key={event.id}
               title={event.title}
@@ -66,7 +67,7 @@ export const Cards = () => {
               onEdit={() => {}}
               onClose={() => navigate({ search: {} })}
             />
-          </>
+          </React.Fragment>
         )
       })}
     </Grid>
