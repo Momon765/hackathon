@@ -6,6 +6,6 @@ class SlackNotificationWorker < ApplicationWorker
   # 時間指定の場合は .perform_at(時間, 引数)
   # 非同期で即実行したい時は .perform_async(引数)
   def perform(message)
-    SlackNotifier.new.send(message, 'ランチ速報')
+    ChatNotification.new.notice(message)
   end
 end
