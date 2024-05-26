@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  protect_from_forgery with: :null_session
   # You should configure your model like this:
   # devise :omniauthable, omniauth_providers: [:twitter]
 
