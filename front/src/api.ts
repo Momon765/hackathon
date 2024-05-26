@@ -235,13 +235,13 @@ export const getMe = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/me`,options
+      `https://devsite.local/me`,options
     );
   }
 
 
 export const getGetMeQueryKey = () => {
-    return [`http://localhost:3000/me`] as const;
+    return [`https://devsite.local/me`] as const;
     }
 
     
@@ -295,13 +295,13 @@ export const getLoginUrl = (
  ): Promise<AxiosResponse<LoginUrl>> => {
     
     return axios.default.get(
-      `http://localhost:3000/login`,options
+      `https://devsite.local/login`,options
     );
   }
 
 
 export const getGetLoginUrlQueryKey = () => {
-    return [`http://localhost:3000/login`] as const;
+    return [`https://devsite.local/login`] as const;
     }
 
     
@@ -355,7 +355,7 @@ export const callback = (
  ): Promise<AxiosResponse<unknown>> => {
     
     return axios.default.get(
-      `http://localhost:3000/callback`,{
+      `https://devsite.local/callback`,{
     ...options,
         params: {...params, ...options?.params},}
     );
@@ -363,7 +363,7 @@ export const callback = (
 
 
 export const getCallbackQueryKey = (params: CallbackParams,) => {
-    return [`http://localhost:3000/callback`, ...(params ? [params]: [])] as const;
+    return [`https://devsite.local/callback`, ...(params ? [params]: [])] as const;
     }
 
     
@@ -417,13 +417,13 @@ export const getEvents = (
  ): Promise<AxiosResponse<GetEventsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/events`,options
+      `https://devsite.local/events`,options
     );
   }
 
 
 export const getGetEventsQueryKey = () => {
-    return [`http://localhost:3000/events`] as const;
+    return [`https://devsite.local/events`] as const;
     }
 
     
@@ -477,7 +477,7 @@ export const postEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.post(
-      `http://localhost:3000/events`,
+      `https://devsite.local/events`,
       postEventRequest,options
     );
   }
@@ -533,13 +533,13 @@ export const getEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/events/${eventId}`,options
+      `https://devsite.local/events/${eventId}`,options
     );
   }
 
 
 export const getGetEventQueryKey = (eventId: string,) => {
-    return [`http://localhost:3000/events/${eventId}`] as const;
+    return [`https://devsite.local/events/${eventId}`] as const;
     }
 
     
@@ -594,7 +594,7 @@ export const putEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.put(
-      `http://localhost:3000/events/${eventId}`,
+      `https://devsite.local/events/${eventId}`,
       postEventRequest,options
     );
   }
@@ -650,7 +650,7 @@ export const deleteEvent = (
  ): Promise<AxiosResponse<GetEventResponse>> => {
     
     return axios.default.delete(
-      `http://localhost:3000/events/${eventId}`,options
+      `https://devsite.local/events/${eventId}`,options
     );
   }
 
@@ -706,7 +706,7 @@ export const joinEvent = (
  ): Promise<AxiosResponse<JoinEventResponse>> => {
     
     return axios.default.post(
-      `http://localhost:3000/events/${eventId}/participants`,
+      `https://devsite.local/events/${eventId}/participants`,
       joinEventRequest,options
     );
   }
@@ -762,13 +762,13 @@ export const getUser = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/users/${userId}`,options
+      `https://devsite.local/users/${userId}`,options
     );
   }
 
 
 export const getGetUserQueryKey = (userId: string,) => {
-    return [`http://localhost:3000/users/${userId}`] as const;
+    return [`https://devsite.local/users/${userId}`] as const;
     }
 
     
@@ -823,7 +823,7 @@ export const putUser = (
  ): Promise<AxiosResponse<GetUserResponse>> => {
     
     return axios.default.put(
-      `http://localhost:3000/users/${userId}`,
+      `https://devsite.local/users/${userId}`,
       putUserRequest,options
     );
   }
@@ -879,13 +879,13 @@ export const getRestaurants = (
  ): Promise<AxiosResponse<GetRestaurantsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/restaurants`,options
+      `https://devsite.local/restaurants`,options
     );
   }
 
 
 export const getGetRestaurantsQueryKey = () => {
-    return [`http://localhost:3000/restaurants`] as const;
+    return [`https://devsite.local/restaurants`] as const;
     }
 
     
@@ -939,13 +939,13 @@ export const getDepartments = (
  ): Promise<AxiosResponse<GetDepartmentsResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/departments`,options
+      `https://devsite.local/departments`,options
     );
   }
 
 
 export const getGetDepartmentsQueryKey = () => {
-    return [`http://localhost:3000/departments`] as const;
+    return [`https://devsite.local/departments`] as const;
     }
 
     
@@ -999,13 +999,13 @@ export const getRoles = (
  ): Promise<AxiosResponse<GetRolesResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/roles`,options
+      `https://devsite.local/roles`,options
     );
   }
 
 
 export const getGetRolesQueryKey = () => {
-    return [`http://localhost:3000/roles`] as const;
+    return [`https://devsite.local/roles`] as const;
     }
 
     
@@ -1059,13 +1059,13 @@ export const getEmploymentTypes = (
  ): Promise<AxiosResponse<GetEmploymentTypesResponse>> => {
     
     return axios.default.get(
-      `http://localhost:3000/employment_types`,options
+      `https://devsite.local/employment_types`,options
     );
   }
 
 
 export const getGetEmploymentTypesQueryKey = () => {
-    return [`http://localhost:3000/employment_types`] as const;
+    return [`https://devsite.local/employment_types`] as const;
     }
 
     

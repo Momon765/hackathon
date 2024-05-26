@@ -8,7 +8,8 @@ export default defineConfig({
 		output: {
 			client: "react-query",
 			target: "./src/api.ts",
-			baseUrl: "http://localhost:3000",
+			// baseUrl: "http://localhost:3000",
+			baseUrl: "https://devsite.local",
 			mock: true,
 		},
 	},
