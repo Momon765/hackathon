@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:email) { |n| "test#{n}@example.com" }
     sex { :male }
     password { 'password' }
-    uid { 'test' }
+    sequence(:uid) { |n| "uid#{n}" }
     provider { 'slack' }
     profile_image_url { 'http://example.com/image.jpg' }
     role

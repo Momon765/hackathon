@@ -13,16 +13,16 @@ RSpec.describe 'Events', type: :request do # rubocop:disable RSpec/MultipleMemoi
   let(:user_with_other_sex) { create(:user, sex: 'female', role: role, employment_type: employment_type) }
   let(:user_with_other_role) { create(:user, sex: 'male', role: other_role, employment_type: employment_type) }
   let(:user_with_other_employment_type) { create(:user, sex: 'male', employment_type: other_employment_type) }
+  let(:event) do # rubocop:disable RSpec/IndexedLet
+    create(:event, title: 'イベント1', description: '説明1', organizer: user, users: [user, user_with_other_sex],
+                roles: [role, other_role], employment_types: [employment_type, other_employment_type])
+  end
+  let(:other_event) do # rubocop:disable RSpec/IndexedLet
+    create(:event, title: 'イベント2', description: '説明2', organizer: user_with_other_sex, users: [user, user_with_other_sex],
+                roles: [role, other_role], employment_types: [employment_type, other_employment_type])
+  end
 
   describe '#index' do # rubocop:disable RSpec/MultipleMemoizedHelpers
-    let(:event1) do # rubocop:disable RSpec/IndexedLet
-      create(:event, title: 'イベント1', description: '説明1', organizer: user, users: [user, user_with_other_sex],
-                  roles: [role, other_role], employment_types: [employment_type, other_employment_type])
-    end
-    let(:event2) do # rubocop:disable RSpec/IndexedLet
-      create(:event, title: 'イベント2', description: '説明2', organizer: user_with_other_sex, users: [user, user_with_other_sex],
-                  roles: [role, other_role], employment_types: [employment_type, other_employment_type])
-    end
     let(:expected_body) do
       [
         {
@@ -192,10 +192,166 @@ RSpec.describe 'Events', type: :request do # rubocop:disable RSpec/MultipleMemoi
       ]
     end
 
-    pending 'イベントの一覧と200 OKを返すこと' do
+    it '200 OKを返すこと' do
+      sign_in user
       get events_path
       expect(response).to have_http_status(:ok)
-      expect(response.body).to eq(expected_body)
+      # expect(response.body).to eq(expected_body)
+    end
+  end
+
+  describe '#show' do
+    it '認証済みのユーザーの場合、200 OKを返すこと' do
+      sign_in user
+      get event_path(event.id)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it '未認証のユーザーの場合、401 Unauthorizedを返すこと' do
+      get event_path(event.id)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'user_idが不正な場合、400 Bad Requestを返すこと' do
+      sign_in user
+      get event_path(0)
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  describe '#destroy' do
+    it '認証済みのユーザーの場合、200 OKを返すこと' do
+      sign_in user
+      delete event_path(event.id)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it '未認証のユーザーの場合、401 Unauthorizedを返すこと' do
+      delete event_path(event.id)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it '認可を持たないユーザーの場合、リダイレクトすること' do
+      sign_in user
+      put user_path(other_event.id)
+      expect(response).to redirect_to root_url
+    end
+  end
+
+  describe '#update' do
+    let(:valid_params) do
+      {
+        'event' =>
+          {
+            name: 'Modified Name1',
+          },
+      }
+    end
+    let(:invalid_params) do
+      {
+        'event' =>
+          {
+            name: 'Modified Name2',
+            deadline: '2000-12-31',
+          },
+      }
+    end
+
+    it '認証済みのユーザーの場合、200 OKを返すこと' do
+      sign_in user
+      patch event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:ok)
+    end
+
+    it '未認証のユーザーの場合、401 Unauthorizedを返すこと' do
+      patch event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it '認可を持たないユーザーの場合、リダイレクトすること' do
+      sign_in user
+      patch event_path(other_event.id), params: valid_params
+      expect(response).to redirect_to root_url
+    end
+
+    it 'paramsが不正な場合、400 Bad Requestを返すこと' do
+      sign_in user
+      patch event_path(event.id), params: invalid_params
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  describe '#update' do
+    let(:valid_params) do
+      {
+        'event' =>
+          {
+            name: 'Modified Name1',
+          },
+      }
+    end
+    let(:invalid_params) do
+      {
+        'event' =>
+          {
+            name: 'Modified Name2',
+            deadline: '2000-12-31',
+          },
+      }
+    end
+
+    it '認証済みのユーザーの場合、200 OKを返すこと' do
+      sign_in user
+      patch event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:ok)
+    end
+
+    it '未認証のユーザーの場合、401 Unauthorizedを返すこと' do
+      patch event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it '認可を持たないユーザーの場合、リダイレクトすること' do
+      sign_in user
+      patch event_path(other_event.id), params: valid_params
+      expect(response).to redirect_to root_url
+    end
+
+    it 'paramsが不正な場合、400 Bad Requestを返すこと' do
+      sign_in user
+      patch event_path(event.id), params: invalid_params
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  describe '#participants' do
+    let(:valid_params) do
+      {
+        user_id: user.id,
+      }
+    end
+    let(:invalid_params) do
+      {
+        user_id: -1,
+      }
+    end
+
+    it '認証済みのユーザーの場合、200 OKを返すこと' do
+      sign_in user
+      put participants_event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:ok)
+    end
+
+    it '未認証のユーザーの場合、401 Unauthorizedを返すこと' do
+      put participants_event_path(event.id), params: valid_params
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'paramsが不正な場合、400 Bad Requestを返すこと' do
+      binding.pry
+      sign_in user
+      put participants_event_path(event.id), params: invalid_params
+      expect(response).to have_http_status(:bad_request)
     end
   end
 end

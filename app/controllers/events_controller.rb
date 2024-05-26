@@ -2,6 +2,8 @@
 
 class EventsController < ApplicationController # rubocop:disable Metrics/ClassLength
   protect_from_forgery :except => %i[create participants]
+  before_action :logged_in_user, only: %i[index create show update destroy participants]
+  before_action :authenticate_event, only: %i[update destroy]
 
   def index
     events = Event.order('deadline desc')

@@ -64,6 +64,7 @@ class Event < ApplicationRecord
   end
 
   def replaced_attributes
+    event_attrs = attributes
     organizer_attr = organizer&.replaced_attributes
     event_attrs.delete('organizer_id')
     event_attrs['organizer'] = organizer_attr
