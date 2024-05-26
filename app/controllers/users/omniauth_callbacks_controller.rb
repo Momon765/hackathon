@@ -35,7 +35,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.instance_of?(User)
       flash[:notice] = t('devise.omniauth_callbacks.success', kind: provider.to_s.capitalize)
       sign_in @user, event: :authentication
-      redirect_to root_path
+      redirect_to ENV.fetch('FRONTEND_URL', 'http://localhost:5173'), allow_other_host: true
     else
       session["devise.#{provider}_data"] = request.env['omniauth.auth'].credentials.id_token
       redirect_to new_user_registration_path, alert: @user
